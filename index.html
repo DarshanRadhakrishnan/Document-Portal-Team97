@@ -1,0 +1,423 @@
+<title>Evolutionary Algorithm Benchmark Selection System</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=Source+Serif+4:wght@600;700&display=swap">
+<style>
+/* Layout concept: a documentation portal in one scroll. A contour map of a multimodal function
+   (the subject's own landscape) sits beside the hero; everything else is quiet, tabular and scannable. */
+:root{
+  --bg:#F4F6F9; --surface:#FFFFFF; --ink:#13202C; --muted:#566677; --line:#D8DFE6;
+  --accent:#0A6B73; --accent-ink:#FFFFFF; --tint:#E1F0F1;
+  --warn:#7A5200; --warn-bg:#FBF1DC; --good:#1E6B43; --good-bg:#E4F3EA;
+  --f-display:'Source Serif 4',Georgia,'Times New Roman',serif;
+  --f-body:'IBM Plex Sans',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;
+  --f-mono:'IBM Plex Mono',ui-monospace,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0D141B; --surface:#141E27; --ink:#E6ECF1; --muted:#8FA1B1; --line:#25323E;
+    --accent:#5CC8C0; --accent-ink:#06201E; --tint:#12302F;
+    --warn:#E3B55A; --warn-bg:#2A2312; --good:#6FD39B; --good-bg:#13281D; color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0D141B; --surface:#141E27; --ink:#E6ECF1; --muted:#8FA1B1; --line:#25323E;
+  --accent:#5CC8C0; --accent-ink:#06201E; --tint:#12302F;
+  --warn:#E3B55A; --warn-bg:#2A2312; --good:#6FD39B; --good-bg:#13281D; color-scheme:dark;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:72px}
+body{
+  margin:0; background:var(--bg); color:var(--ink); font:16px/1.6 var(--f-body);
+  padding-block:0;
+  padding-left:max(16px, env(safe-area-inset-left,0px));
+  padding-right:max(16px, env(safe-area-inset-right,0px));
+}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:30;background:var(--surface)}
+a{color:var(--accent);text-underline-offset:3px}
+a:focus-visible,button:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:4px}
+.wrap{max-width:1080px;margin:0 auto}
+h1,h2,h3{font-family:var(--f-display);font-weight:700;line-height:1.15;text-wrap:balance;margin:0}
+h2{font-size:clamp(1.55rem,3.4vw,2rem);margin-bottom:.9rem}
+h3{font-size:1.15rem}
+p{margin:0 0 1rem;max-width:68ch}
+.mono{font-family:var(--f-mono);font-size:.82em}
+.eyebrow{font:500 .74rem/1 var(--f-mono);letter-spacing:.09em;text-transform:uppercase;color:var(--muted);margin-bottom:.8rem;display:block}
+
+/* top bar */
+.bar{position:sticky;top:env(safe-area-inset-top,0px);z-index:40;background:var(--surface);border-bottom:1px solid var(--line);
+  margin-inline:calc(-1 * max(16px, env(safe-area-inset-left,0px))) calc(-1 * max(16px, env(safe-area-inset-right,0px)));
+  padding-inline:max(16px, env(safe-area-inset-left,0px)) max(16px, env(safe-area-inset-right,0px))}
+.bar-in{max-width:1080px;margin:0 auto;display:flex;align-items:center;gap:1.25rem;height:52px}
+.brand{font:600 .88rem var(--f-body);white-space:nowrap;color:var(--ink);text-decoration:none}
+.nav{display:flex;gap:1.1rem;overflow-x:auto;min-width:0;flex:1;scrollbar-width:none}
+.nav::-webkit-scrollbar{display:none}
+.nav a{font-size:.88rem;color:var(--muted);text-decoration:none;white-space:nowrap;padding:.3rem 0}
+.nav a:hover{color:var(--ink)}
+.gh{font-size:.85rem;font-weight:600;white-space:nowrap}
+
+section{padding-block:3.4rem;border-top:1px solid var(--line)}
+header.hero{padding-block:3rem 3.2rem;border-top:0}
+
+/* hero */
+.hero-grid{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,.9fr);gap:2.5rem;align-items:center}
+.hero h1{font-size:clamp(2rem,5vw,3.1rem);margin-bottom:1rem}
+.lede{font-size:1.1rem;color:var(--ink);max-width:56ch}
+.meta{display:flex;flex-wrap:wrap;gap:.4rem 1.2rem;margin:1.2rem 0 1.5rem;font-size:.9rem;color:var(--muted)}
+.meta b{color:var(--ink);font-weight:600}
+.actions{display:flex;flex-wrap:wrap;gap:.7rem}
+.btn{display:inline-block;padding:.65rem 1.1rem;border-radius:8px;font-weight:600;font-size:.92rem;text-decoration:none;border:1px solid var(--accent)}
+.btn.primary{background:var(--accent);color:var(--accent-ink)}
+.btn.ghost{background:transparent;color:var(--accent)}
+figure.map{margin:0;min-width:0}
+figure.map canvas{width:100%;height:auto;aspect-ratio:4/3;display:block;border:1px solid var(--line);border-radius:10px;background:var(--surface)}
+figure.map figcaption{font-size:.8rem;color:var(--muted);margin-top:.6rem}
+
+/* stats */
+.stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:1rem;margin-top:2.6rem}
+.stat{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:1rem 1.1rem}
+.stat b{display:block;font:600 1.7rem/1.1 var(--f-display);font-variant-numeric:tabular-nums}
+.stat span{font-size:.82rem;color:var(--muted)}
+.src{font-size:.78rem;color:var(--muted);margin:.8rem 0 0}
+
+/* objectives */
+.cards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1rem}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:1.1rem 1.2rem;min-width:0}
+.card h3{margin-bottom:.4rem}
+.card p{margin:0;color:var(--muted);font-size:.95rem}
+
+/* problem */
+.two{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);gap:2.5rem}
+.issues{list-style:none;margin:0;padding:0;display:grid;gap:.8rem}
+.issues li{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:.9rem 1.1rem;font-size:.95rem}
+.issues b{display:block;margin-bottom:.15rem}
+
+/* method */
+.steps{list-style:none;margin:0;padding:0;display:grid;gap:0;position:relative}
+.steps li{display:grid;grid-template-columns:2.2rem minmax(0,1fr);gap:1rem;padding-bottom:1.4rem;position:relative}
+.steps li::before{content:"";position:absolute;left:1.05rem;top:2.2rem;bottom:0;width:1px;background:var(--line)}
+.steps li:last-child{padding-bottom:0}.steps li:last-child::before{display:none}
+.dot{width:2.2rem;height:2.2rem;border-radius:50%;background:var(--tint);color:var(--accent);display:grid;place-items:center;font:600 .85rem var(--f-mono)}
+.steps h3{font-family:var(--f-body);font-size:1rem;font-weight:600;margin-bottom:.2rem}
+.steps p{margin:0;color:var(--muted);font-size:.93rem;max-width:72ch}
+.tag{font:500 .72rem var(--f-mono);background:var(--tint);color:var(--accent);padding:.1rem .45rem;border-radius:4px;white-space:nowrap}
+
+/* demo */
+.tabs{display:flex;flex-wrap:wrap;gap:.5rem;margin-bottom:1.1rem}
+.tab{font:500 .88rem var(--f-body);padding:.5rem .9rem;border-radius:8px;border:1px solid var(--line);background:var(--surface);color:var(--muted);cursor:pointer}
+.tab[aria-selected="true"]{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.demo{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:1.3rem 1.4rem}
+.q{font-size:1.02rem;margin:0 0 1rem;padding-bottom:1rem;border-bottom:1px solid var(--line)}
+.q small{display:block;font:500 .72rem var(--f-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:.3rem}
+.ent{display:flex;flex-wrap:wrap;gap:.6rem 1.4rem;align-items:baseline;margin-bottom:.6rem}
+.ent h3{font-size:1.3rem}
+.badges{display:flex;flex-wrap:wrap;gap:.4rem}
+.badge{font:500 .75rem var(--f-mono);padding:.15rem .55rem;border-radius:999px;background:var(--tint);color:var(--accent)}
+.badge.ok{background:var(--good-bg);color:var(--good)}
+.desc{color:var(--muted);font-size:.92rem;margin:.2rem 0 1.1rem}
+.fam{border-top:1px solid var(--line);padding-top:.8rem;margin-top:.8rem}
+.fam h4{margin:0 0 .5rem;font:500 .78rem var(--f-mono);color:var(--muted);letter-spacing:.02em}
+.rank{list-style:none;margin:0;padding:0;display:grid;gap:.35rem}
+.rank li{display:grid;grid-template-columns:1.6rem minmax(0,1fr) auto;gap:.6rem;align-items:baseline;font-size:.93rem}
+.rank .n{font:500 .8rem var(--f-mono);color:var(--muted)}
+.rank .meta2{font:400 .76rem var(--f-mono);color:var(--muted);white-space:nowrap}
+.note{background:var(--warn-bg);color:var(--warn);border-radius:8px;padding:.7rem .9rem;font-size:.85rem;margin-top:1.1rem}
+
+/* progress */
+.cols3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1rem}
+.col{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:1.1rem 1.2rem;min-width:0}
+.col h3{font-family:var(--f-body);font-size:.95rem;margin-bottom:.7rem;display:flex;align-items:center;gap:.5rem}
+.col ul{margin:0;padding-left:1.1rem;font-size:.92rem;color:var(--muted);display:grid;gap:.35rem}
+.col li strong{color:var(--ink);font-weight:500}
+.pill{font:500 .7rem var(--f-mono);padding:.1rem .5rem;border-radius:999px}
+.pill.done{background:var(--good-bg);color:var(--good)}
+.pill.now{background:var(--warn-bg);color:var(--warn)}
+.pill.next{background:var(--tint);color:var(--accent)}
+.results{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1rem;margin-top:1.4rem}
+
+/* tables */
+.tw{overflow-x:auto;border:1px solid var(--line);border-radius:10px;background:var(--surface)}
+table{border-collapse:collapse;width:100%;min-width:620px;font-size:.92rem}
+th,td{text-align:left;padding:.65rem .9rem;border-bottom:1px solid var(--line);vertical-align:top}
+th{font:500 .74rem var(--f-mono);letter-spacing:.06em;text-transform:uppercase;color:var(--muted);background:var(--bg)}
+tr:last-child td{border-bottom:0}
+td:first-child{white-space:nowrap;font-weight:500}
+code{font-family:var(--f-mono);font-size:.84em;color:var(--accent)}
+
+/* team */
+.team{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:1rem}
+.person{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:1.1rem 1.2rem;min-width:0}
+.person .av{width:2.6rem;height:2.6rem;border-radius:50%;background:var(--tint);color:var(--accent);display:grid;place-items:center;font:600 .95rem var(--f-display);margin-bottom:.7rem}
+.person b{display:block}
+.person span{font-size:.85rem;color:var(--muted)}
+.person.todo{border-style:dashed;background:transparent}
+.person.todo .av{background:transparent;border:1px dashed var(--line);color:var(--muted)}
+.guide{margin-top:1.2rem;font-size:.95rem}
+
+footer{border-top:1px solid var(--line);padding-block:2rem 3rem;font-size:.85rem;color:var(--muted)}
+
+@media (max-width:860px){
+  .hero-grid,.two{grid-template-columns:minmax(0,1fr)}
+  .stats{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .cols3,.results{grid-template-columns:minmax(0,1fr)}
+  .cards{grid-template-columns:minmax(0,1fr)}
+  .brand{display:none}
+}
+@media (prefers-reduced-motion: reduce){html{scroll-behavior:auto}}
+</style>
+
+<div class="bar"><div class="bar-in">
+  <a class="brand" href="#top">EA Benchmark Selection</a>
+  <nav class="nav" aria-label="Sections">
+    <a href="#objectives">Objectives</a><a href="#problem">Problem</a><a href="#method">Methodology</a>
+    <a href="#demo">Demonstration</a><a href="#progress">Progress</a><a href="#docs">Documentation</a><a href="#team">Team</a>
+  </nav>
+  <a class="gh" href="https://github.com/Viritha-D/project_fyp" target="_blank" rel="noopener">GitHub</a>
+</div></div>
+
+<div class="wrap" id="top">
+
+<header class="hero">
+  <div class="hero-grid">
+    <div>
+      <span class="eyebrow">Final-year project · Team 97</span>
+      <h1>Evolutionary Algorithm Benchmark Selection System</h1>
+      <p class="lede">Describe your optimisation problem in plain words. The system finds the closest benchmark problem in a knowledge base mined from conference papers, tells you how sure it is, and lists the evolutionary strategies that were reported on it.</p>
+      <div class="meta">
+        <span><b>Amrita Vishwa Vidyapeetham</b></span>
+        <span>Guide: <b>Dr. Ritwik M.</b></span>
+      </div>
+      <div class="actions">
+        <a class="btn primary" href="#demo">See the demonstration</a>
+        <a class="btn ghost" href="https://github.com/Viritha-D/project_fyp" target="_blank" rel="noopener">View the code on GitHub</a>
+      </div>
+    </div>
+    <figure class="map">
+      <canvas id="landscape" width="640" height="480" role="img" aria-label="Contour map of the two-variable Rastrigin function, a landscape with many local optima"></canvas>
+      <figcaption>Rastrigin function in two variables: regularly spaced local optima. Knowing a problem's landscape is what lets us choose a strategy for it.</figcaption>
+    </figure>
+  </div>
+  <div class="stats">
+    <div class="stat"><b>456</b><span>conference papers read</span></div>
+    <div class="stat"><b>4,256</b><span>extracted problem records</span></div>
+    <div class="stat"><b>1,038</b><span>problem entities after grouping</span></div>
+    <div class="stat"><b>3,700</b><span>ranked strategy entries</span></div>
+  </div>
+  <p class="src">Counts come from the project's own files: the master records table, <span class="mono">problem_entities.json</span> and <span class="mono">entity_strategy_layer_v2.csv</span>.</p>
+</header>
+
+<section id="objectives">
+  <span class="eyebrow">Objectives</span>
+  <h2>What the project sets out to do</h2>
+  <div class="cards">
+    <div class="card"><h3>Build the knowledge base</h3><p>Turn results scattered across paper PDFs into one searchable table of benchmark problems, landscapes, algorithms and reported outcomes.</p></div>
+    <div class="card"><h3>Match a problem to a benchmark</h3><p>Take a user's plain-language description and find the closest known problem, instead of asking for exact function names.</p></div>
+    <div class="card"><h3>Rank strategies by evidence</h3><p>For each problem, list the strategies reported on it, grouped by performance metric and ordered by how much evidence supports them.</p></div>
+    <div class="card"><h3>Be honest about confidence</h3><p>Report how sure the match is separately from how many papers back the answer, and decline to answer when the match is weak.</p></div>
+    <div class="card" style="grid-column:1/-1"><h3>Grow beyond text</h3><p>Add matching on the measured shape of the user's objective function (landscape analysis), run the recommended strategies, and put it all behind a simple interface.</p></div>
+  </div>
+</section>
+
+<section id="problem">
+  <span class="eyebrow">Problem statement</span>
+  <h2>Choosing an evolutionary algorithm is still mostly guesswork</h2>
+  <div class="two">
+    <div>
+      <p>Hundreds of papers report how evolutionary algorithms perform on benchmark problems. Someone with a new problem has to read many of them, work out which benchmark resembles their own, and guess which results transfer.</p>
+      <p>The evidence exists, but it is locked in PDFs written in different styles. This project reads it once, structures it, and makes it queryable, so the question "what has worked on problems like mine?" gets an answer with its supporting evidence attached.</p>
+    </div>
+    <ul class="issues">
+      <li><b>Same problem, different words.</b>One benchmark appears under many names and spellings, so papers cannot be grouped by title alone.</li>
+      <li><b>Metrics do not compare.</b>A mean error and a success rate cannot be ranked against each other, so strategies are ranked per metric only.</li>
+      <li><b>Missing details.</b>Many papers leave out parameters such as population size; where we fill in a standard default, it is treated as a default, not as a finding.</li>
+    </ul>
+  </div>
+</section>
+
+<section id="method">
+  <span class="eyebrow">Methodology</span>
+  <h2>From a paper PDF to a ranked recommendation</h2>
+  <p>The pipeline runs in eight stages. Each stage writes a file the next one reads, so every result can be traced back to the papers behind it.</p>
+  <ol class="steps">
+    <li><span class="dot">1</span><div><h3>Extract <span class="tag">LLM + fixed schema</span></h3><p>A language model reads each paper and fills a fixed set of fields: problem, landscape traits, algorithm, parameters, performance metric and outcome.</p></div></li>
+    <li><span class="dot">2</span><div><h3>Clean <span class="tag">Python · Pandas</span></h3><p>Placeholders are standardised, duplicate records removed, and unreported numeric parameters set to standard defaults that stay marked as defaults.</p></div></li>
+    <li><span class="dot">3</span><div><h3>Describe each record</h3><p>One matching text is built per record: function name and landscape for benchmark papers, problem context and title for applied papers. Non-English text is translated.</p></div></li>
+    <li><span class="dot">4</span><div><h3>Embed <span class="tag">all-mpnet-base-v2</span></h3><p>Each text becomes a 768-number sentence embedding, so descriptions with similar meaning sit close together.</p></div></li>
+    <li><span class="dot">5</span><div><h3>Group into problem entities <span class="tag">name keys + clustering</span></h3><p>Records that describe the same problem are merged, using name rules (for example every CEC 2017 variant) plus embedding clusters. Entities are typed as suite, single function or named subset. Checked against a hand-labelled set of 38 papers.</p></div></li>
+    <li><span class="dot">6</span><div><h3>Rank strategies</h3><p>For each entity, strategies are ranked within each metric family, never across metrics, ordered by whether the optimum was found, how often, and how many papers report it.</p></div></li>
+    <li><span class="dot">7</span><div><h3>Match a user's query <span class="tag">BM25 + dense + cross-encoder</span></h3><p>Keyword search and embedding search each return candidates; reciprocal rank fusion merges them; a cross-encoder re-scores the shortlist, with a small bonus for entities backed by more papers.</p></div></li>
+    <li><span class="dot">8</span><div><h3>Answer with confidence</h3><p>The output gives the matched entity, a match confidence (the margin between the top two candidates), the evidence strength (papers behind it) and the strategies by metric. If the margin is too small, the query is logged as unmapped.</p></div></li>
+  </ol>
+</section>
+
+<section id="demo">
+  <span class="eyebrow">Demonstration</span>
+  <h2>What the system returns</h2>
+  <p>Three problems from the knowledge base. The matched entity, paper counts and strategies are read from the project's data files. The queries are illustrative inputs for each entity; live matching runs on the team's machine with the scripts in the repository.</p>
+  <div class="tabs" role="tablist" aria-label="Example problems" id="tabs"></div>
+  <div class="demo" id="demo-panel" role="tabpanel" aria-live="polite"></div>
+</section>
+
+<section id="progress">
+  <span class="eyebrow">Project progress</span>
+  <h2>Where the project stands</h2>
+  <div class="cols3">
+    <div class="col"><h3><span class="pill done">Done</span> Core system</h3>
+      <ul>
+        <li><strong>Extraction and cleaning</strong> of all paper tables</li>
+        <li><strong>Matching texts and embeddings</strong> for 4,256 records</li>
+        <li><strong>Entity grouping</strong> and entity descriptions</li>
+        <li><strong>Strategy ranking</strong> per metric family</li>
+        <li><strong>Hybrid retrieval</strong> with confidence gate</li>
+        <li><strong>Structured output</strong> and an evaluation suite</li>
+      </ul></div>
+    <div class="col"><h3><span class="pill now">In progress</span> More data</h3>
+      <ul>
+        <li><strong>PReMI papers</strong>: 779 new records ingested into the master table; embeddings, grouping and ranking still to be rebuilt</li>
+        <li><strong>Reusable ingestion step</strong> so teammates can add papers from PDFs or CSVs</li>
+        <li><strong>Re-evaluation</strong> after the rebuild</li>
+      </ul></div>
+    <div class="col"><h3><span class="pill next">Planned</span> Next</h3>
+      <ul>
+        <li><strong>Landscape matching</strong> from the user's objective function (ELA) with a reference library</li>
+        <li><strong>Solver stage</strong>: run recommended strategies with MEALPy against defaults</li>
+        <li><strong>Web interface</strong> for entering a problem</li>
+      </ul></div>
+  </div>
+  <div class="results">
+    <div class="stat"><b>1.0</b><span>grouping agreement (ARI and NMI) with 38 hand-labelled papers</span></div>
+    <div class="stat"><b>61%</b><span>top-1 accuracy on the team's development test queries</span></div>
+    <div class="stat"><b>6 of 6</b><span>out-of-scope queries correctly rejected</span></div>
+  </div>
+  <p class="src">The test queries were written during development and used for tuning, so the 61% is a development figure and will be re-measured on fresh queries.</p>
+</section>
+
+<section id="docs">
+  <span class="eyebrow">Project documentation</span>
+  <h2>Stage by stage reference</h2>
+  <p>Each stage has its own script in the repository and its own output file.</p>
+  <div class="tw"><table>
+    <thead><tr><th>Stage</th><th>What it does</th><th>Main output</th></tr></thead>
+    <tbody>
+      <tr><td>1 · Master table</td><td>Merges and cleans the extracted CSVs into one table</td><td><code>papers_master</code> CSV</td></tr>
+      <tr><td>2 · Matching text</td><td>Builds one description per record, detects language, translates</td><td><code>…_with_matching_text.csv</code></td></tr>
+      <tr><td>3 · Embeddings</td><td>Encodes each text with all-mpnet-base-v2</td><td><code>paper_embeddings.npy</code></td></tr>
+      <tr><td>4 · Grouping</td><td>Name rules and clustering assign records to entities; validated on a labelled set</td><td><code>paper_to_entity_map_final.csv</code></td></tr>
+      <tr><td>5 · Entities</td><td>Builds one description and one embedding per entity</td><td><code>problem_entities.json</code></td></tr>
+      <tr><td>6 · Strategy layer</td><td>Ranks strategies per entity and per metric family</td><td><code>entity_strategy_layer_v2.csv</code></td></tr>
+      <tr><td>7 · Retrieval</td><td>BM25 and dense search, rank fusion, cross-encoder, confidence gate</td><td>retrieval scripts</td></tr>
+      <tr><td>8 · Final output</td><td>Assembles entity, confidence, evidence and strategies; logs unmapped queries</td><td><code>part8_final_output.py</code></td></tr>
+      <tr><td>9 · Evaluation</td><td>Runs easy, hard and out-of-scope queries and reports accuracy</td><td><code>part9_*</code> scripts</td></tr>
+    </tbody>
+  </table></div>
+  <p class="src" style="margin-top:1rem">Design notes written for the project: knowledge-base schema, implementation plan, landscape-feature validation, and the landscape-matching plan. Code and data files are in the <a href="https://github.com/Viritha-D/project_fyp" target="_blank" rel="noopener">GitHub repository</a>.</p>
+</section>
+
+<section id="team">
+  <span class="eyebrow">Team</span>
+  <h2>Team 97</h2>
+  <div class="team" id="team-grid"></div>
+  <p class="guide"><b>Project guide:</b> Dr. Ritwik M., Amrita Vishwa Vidyapeetham</p>
+</section>
+
+<footer>
+  <div>Evolutionary Algorithm Benchmark Selection System · Team 97 · Amrita Vishwa Vidyapeetham · Updated October 2026</div>
+  <div style="margin-top:.4rem"><a href="https://github.com/Viritha-D/project_fyp" target="_blank" rel="noopener">github.com/Viritha-D/project_fyp</a></div>
+</footer>
+
+</div>
+
+<script>
+(function(){
+  /* ---- demo data: entities and strategies read from problem_entities_enriched.json and entity_strategy_layer_v2.csv ---- */
+  var DEMOS=[
+    {tab:'Rastrigin', query:'A test function with many regularly spaced local optima where the variables can be optimised separately.',
+     name:'Rastrigin', kind:'single function', papers:11, conf:'high',
+     desc:'Multimodal and linearly separable, with a quadratic overall shape and exponentially many local minima.',
+     fams:[
+      {m:'Best / mean fitness or error value', r:[['BSO-AL',1,'found'],['Factored Evolutionary Algorithm (FEA) with PSO',1,'not found'],['Hybrid FEA (FEA-H) with PSO',1,'not found']]},
+      {m:'Convergence rate / speed', r:[['Generational EA',1,'found'],['Simple Asynchronous EA',1,'found']]},
+      {m:'Success probability', r:[['(100/100_I, 200)-σSA-ES',1,'found'],['(400/400_I, 800)-σSA-ES',1,'found']]}
+     ]},
+    {tab:'CEC 2017 suite', query:'A benchmark suite with unimodal, multimodal, hybrid and composition functions.',
+     name:'CEC 2017 benchmark test suite', kind:'suite', papers:32, conf:'high',
+     desc:'Thirty functions: unimodal (F1–F3), multimodal (F4–F10), hybrid (F11–F20) and composite (F21–F30).',
+     fams:[
+      {m:'Average error and standard deviation over 51 runs', r:[['CMA-ES',1,'not reported'],['LSHADE',1,'not reported'],['DDE-ARA',1,'not reported']]},
+      {m:'Best, worst, median and average error; ECDF; area under curve', r:[['CMA-ES with CSA step-size adaptation and IPOP restart',3,'not reported'],['CMA-ES with MSR step-size adaptation and IPOP restart',3,'not reported']]},
+      {m:'Best / mean fitness or error value', r:[['Classic Differential Evolution (DE)',1,'not found'],['CSsin (improved cuckoo search)',3,'not reported'],['DE',2,'not reported']]}
+     ]},
+    {tab:'ZDT1', query:'A two-objective test problem with a convex Pareto front.',
+     name:'ZDT1', kind:'single function', papers:5, conf:'high',
+     desc:'Two conflicting objectives with a convex Pareto front.',
+     fams:[
+      {m:'Inverted generational distance (IGD)', r:[['MOALO',1,'found'],['MOAOA',1,'found'],['MOMVO',1,'found'],['MOSMA',1,'found']]}
+     ]}
+  ];
+  var tabs=document.getElementById('tabs'), panel=document.getElementById('demo-panel');
+  function el(t,c,x){var e=document.createElement(t);if(c)e.className=c;if(x!=null)e.textContent=x;return e}
+  function show(i){
+    var d=DEMOS[i];
+    Array.prototype.forEach.call(tabs.children,function(b,j){b.setAttribute('aria-selected',j===i?'true':'false')});
+    panel.textContent='';
+    var q=el('p','q'); var s=el('small',null,'Example query'); q.appendChild(s); q.appendChild(document.createTextNode('“'+d.query+'”')); panel.appendChild(q);
+    var ent=el('div','ent'); ent.appendChild(el('h3',null,d.name));
+    var bd=el('div','badges'); bd.appendChild(el('span','badge',d.kind)); bd.appendChild(el('span','badge ok',d.papers+' supporting papers')); bd.appendChild(el('span','badge','description confidence: '+d.conf)); ent.appendChild(bd);
+    panel.appendChild(ent); panel.appendChild(el('p','desc',d.desc));
+    d.fams.forEach(function(f){
+      var box=el('div','fam'); box.appendChild(el('h4',null,'Metric: '+f.m));
+      var ol=el('ol','rank');
+      f.r.forEach(function(r,k){
+        var li=el('li'); li.appendChild(el('span','n',String(k+1))); li.appendChild(el('span',null,r[0]));
+        li.appendChild(el('span','meta2',r[1]+(r[1]===1?' paper':' papers')+' · optimum '+r[2])); ol.appendChild(li);
+      });
+      box.appendChild(ol); panel.appendChild(box);
+    });
+    panel.appendChild(el('p','note','Strategies are ranked within each metric only. Most strategies here rest on one paper, so the evidence is thin; that is why the system reports paper counts next to every answer.'));
+  }
+  DEMOS.forEach(function(d,i){
+    var b=el('button','tab',d.tab); b.type='button'; b.setAttribute('role','tab');
+    b.addEventListener('click',function(){show(i)}); tabs.appendChild(b);
+  });
+  show(0);
+
+  /* ---- team ---- */
+  var TEAM=[
+    {name:'Darshan R', role:'Team 97'},
+    {name:'Team member name', role:'Role and roll number to be added', todo:true},
+    {name:'Team member name', role:'Role and roll number to be added', todo:true}
+  ];
+  var grid=document.getElementById('team-grid');
+  TEAM.forEach(function(p){
+    var c=el('div','person'+(p.todo?' todo':'')); var av=el('div','av',p.todo?'+':p.name.split(' ').map(function(w){return w[0]}).join('').slice(0,2));
+    c.appendChild(av); c.appendChild(el('b',null,p.name)); c.appendChild(el('span',null,p.role)); grid.appendChild(c);
+  });
+
+  /* ---- landscape: banded contour map of the 2-variable Rastrigin function ---- */
+  var cv=document.getElementById('landscape');
+  function hex(v){v=(v||'').trim();var m=/^#([0-9a-f]{6})$/i.exec(v);if(!m)return [255,255,255];var n=parseInt(m[1],16);return [n>>16&255,n>>8&255,n&255]}
+  function mix(a,b,t){return [a[0]+(b[0]-a[0])*t,a[1]+(b[1]-a[1])*t,a[2]+(b[2]-a[2])*t]}
+  function draw(){
+    try{
+      var cs=getComputedStyle(document.documentElement);
+      var bg=hex(cs.getPropertyValue('--surface')), tint=hex(cs.getPropertyValue('--tint')), acc=hex(cs.getPropertyValue('--accent'));
+      var ctx=cv.getContext('2d'), w=cv.width, h=cv.height, img=ctx.createImageData(w,h), TAU=Math.PI*2;
+      for(var j=0;j<h;j++){
+        var y=(j/h-0.5)*4.0-0.25;
+        for(var i=0;i<w;i++){
+          var x=(i/w-0.5)*5.33+0.2;
+          var f=20+x*x+y*y-10*(Math.cos(TAU*x)+Math.cos(TAU*y));
+          var band=f/9, fr=band-Math.floor(band);
+          var base=mix(bg,tint,Math.min(1,f/45));
+          var line=Math.max(0,1-Math.abs(fr-0.5)/0.035);
+          var c=mix(base,acc,line*0.8);
+          var k=(j*w+i)*4; img.data[k]=c[0];img.data[k+1]=c[1];img.data[k+2]=c[2];img.data[k+3]=255;
+        }
+      }
+      ctx.putImageData(img,0,0);
+    }catch(e){}
+  }
+  draw();
+  try{window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change',draw)}catch(e){}
+  try{new MutationObserver(draw).observe(document.documentElement,{attributes:true,attributeFilter:['data-theme']})}catch(e){}
+})();
+</script>
