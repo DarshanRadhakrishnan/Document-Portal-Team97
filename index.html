@@ -78,6 +78,31 @@ figure.map figcaption{font-size:.8rem;color:var(--muted);margin-top:.6rem}
 .stat b{display:block;font:600 1.7rem/1.1 var(--f-display);font-variant-numeric:tabular-nums}
 .stat span{font-size:.82rem;color:var(--muted)}
 .src{font-size:.78rem;color:var(--muted);margin:.8rem 0 0}
+button.stat{font:inherit;color:inherit;text-align:left;cursor:pointer;width:100%;display:flex;flex-direction:column;align-items:flex-start;gap:.15rem}
+button.stat:hover{border-color:var(--accent)}
+button.stat[aria-expanded="true"]{border-color:var(--accent);box-shadow:inset 0 0 0 1px var(--accent)}
+.stat .more{margin-top:.45rem;display:inline-flex;align-items:center;gap:.3rem;font:500 .8125rem var(--f-body);color:var(--accent)}
+.stat .more svg{width:14px;height:14px;transition:transform .2s}
+button.stat[aria-expanded="true"] .more svg{transform:rotate(180deg)}
+.xpanel{margin-top:1rem;background:var(--surface);border:1px solid var(--accent);border-radius:12px;padding:1.2rem 1.3rem;min-width:0}
+.xpanel[hidden]{display:none}
+.xpanel h3{margin-bottom:.6rem}
+.xpanel p{font-size:.92rem;color:var(--muted)}
+.xpanel p b{color:var(--ink);font-weight:600}
+.xpanel h4{margin:1.2rem 0 .5rem;font:500 .8125rem var(--f-mono);color:var(--muted);letter-spacing:.04em;text-transform:uppercase}
+.xpanel .tw table{min-width:560px}
+.xpanel .tw table.wide{min-width:920px}
+.xpanel table.wide td:nth-child(n+4){min-width:10rem}
+.xpanel td{font-size:.875rem}
+.xpanel td:first-child{white-space:normal}
+.xpanel td.num,.xpanel th.num{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+.chips{display:flex;flex-wrap:wrap;gap:.35rem;margin:0;padding:0;list-style:none}
+.chips li{font:400 .8125rem var(--f-mono);background:var(--bg);border:1px solid var(--line);border-radius:5px;padding:.1rem .45rem;overflow-wrap:anywhere}
+.counts{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:.6rem;margin:.2rem 0 .4rem}
+.counts div{border:1px solid var(--line);border-radius:8px;padding:.6rem .8rem;background:var(--bg)}
+.counts b{display:block;font:600 1.25rem/1.2 var(--f-display);font-variant-numeric:tabular-nums}
+.counts span{font-size:.8125rem;color:var(--muted)}
+.xpanel .close{margin-top:1rem;font:500 .8125rem var(--f-body);background:transparent;border:1px solid var(--line);border-radius:8px;padding:.4rem .8rem;color:var(--muted);cursor:pointer}
 
 /* objectives */
 .cards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1rem}
@@ -100,6 +125,44 @@ figure.map figcaption{font-size:.8rem;color:var(--muted);margin-top:.6rem}
 .steps h3{font-family:var(--f-body);font-size:1rem;font-weight:600;margin-bottom:.2rem}
 .steps p{margin:0;color:var(--muted);font-size:.93rem;max-width:72ch}
 .tag{font:500 .72rem var(--f-mono);background:var(--tint);color:var(--accent);padding:.1rem .45rem;border-radius:4px;white-space:nowrap}
+
+/* query flow: three stages left to right, stacking top to bottom on narrow screens */
+.flow{display:grid;grid-template-columns:minmax(0,1fr) 2rem minmax(0,1fr) 2rem minmax(0,1fr);align-items:start;margin-top:1.4rem}
+.stage{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:1rem;min-width:0}
+.stage-h{display:flex;align-items:center;gap:.6rem;margin-bottom:.9rem}
+.stage-h .dot{flex:none}
+.stage-h h3{font-family:var(--f-body);font-size:1rem;font-weight:600}
+.stage-h small{display:block;font:500 .8125rem var(--f-mono);color:var(--muted)}
+.fsteps{list-style:none;margin:0;padding:0;display:grid}
+.fstep{position:relative;min-width:0}
+.fstep+.fstep{margin-top:1.6rem}
+.fstep+.fstep::before{content:"";position:absolute;left:50%;top:-1.35rem;height:1.1rem;border-left:1.5px solid var(--accent)}
+.fstep+.fstep::after{content:"";position:absolute;left:calc(50% - 4px);top:-.45rem;border:4px solid transparent;border-top:6px solid var(--accent);border-bottom:0}
+.fbox{background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:.6rem .75rem;min-width:0}
+.fbox b{display:block;font-size:.9rem;font-weight:600;line-height:1.35}
+.fbox span{display:block;font-size:.8125rem;color:var(--muted);line-height:1.45;margin-top:.15rem}
+.fbox code{font-size:.8125rem;overflow-wrap:anywhere}
+.fbox.out{background:var(--tint);border-color:var(--accent)}
+.fbox.pass{background:var(--good-bg);border-color:var(--good)}
+.fbox.pass b,.fbox.pass span{color:var(--good)}
+.fbox.fail{background:var(--warn-bg);border-color:var(--warn)}
+.fbox.fail b,.fbox.fail span{color:var(--warn)}
+.fpair{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:.5rem}
+.fpair .lbl{display:block;font:500 .8125rem var(--f-mono);margin-bottom:.25rem}
+.farrow{align-self:center;justify-self:center;color:var(--accent);display:grid;place-items:center}
+.farrow svg{width:22px;height:22px}
+.planned{margin-top:1.4rem;border:1.5px dashed var(--line);border-radius:12px;padding:1rem}
+.planned-h{display:flex;flex-wrap:wrap;align-items:center;gap:.5rem;margin-bottom:.8rem;font-size:.875rem;color:var(--muted)}
+.planned-h .pill,#flow .eyebrow{font-size:.8125rem}
+.planned-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:.6rem}
+.planned .fbox{background:transparent;border-style:dashed}
+.planned .fbox b{color:var(--muted)}
+@media (max-width:980px){
+  .flow{grid-template-columns:minmax(0,1fr)}
+  .farrow{padding:.3rem 0}
+  .farrow svg{transform:rotate(90deg)}
+  .planned-grid{grid-template-columns:minmax(0,1fr)}
+}
 
 /* demo */
 .tabs{display:flex;flex-wrap:wrap;gap:.5rem;margin-bottom:1.1rem}
@@ -148,9 +211,6 @@ code{font-family:var(--f-mono);font-size:.84em;color:var(--accent)}
 .person{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:1.1rem 1.2rem;min-width:0}
 .person .av{width:2.6rem;height:2.6rem;border-radius:50%;background:var(--tint);color:var(--accent);display:grid;place-items:center;font:600 .95rem var(--f-display);margin-bottom:.7rem}
 .person b{display:block}
-.person span{font-size:.85rem;color:var(--muted)}
-.person.todo{border-style:dashed;background:transparent}
-.person.todo .av{background:transparent;border:1px dashed var(--line);color:var(--muted)}
 .guide{margin-top:1.2rem;font-size:.95rem}
 
 footer{border-top:1px solid var(--line);padding-block:2rem 3rem;font-size:.85rem;color:var(--muted)}
@@ -169,7 +229,7 @@ footer{border-top:1px solid var(--line);padding-block:2rem 3rem;font-size:.85rem
   <a class="brand" href="#top">EA Benchmark Selection</a>
   <nav class="nav" aria-label="Sections">
     <a href="#objectives">Objectives</a><a href="#problem">Problem</a><a href="#method">Methodology</a>
-    <a href="#demo">Demonstration</a><a href="#progress">Progress</a><a href="#docs">Documentation</a><a href="#team">Team</a>
+    <a href="#flow">Query flow</a><a href="#demo">Demonstration</a><a href="#progress">Progress</a><a href="#docs">Documentation</a><a href="#team">Team</a>
   </nav>
   <a class="gh" href="https://github.com/Viritha-D/project_fyp" target="_blank" rel="noopener">GitHub</a>
 </div></div>
@@ -196,13 +256,14 @@ footer{border-top:1px solid var(--line);padding-block:2rem 3rem;font-size:.85rem
       <figcaption>Rastrigin function in two variables: regularly spaced local optima. Knowing a problem's landscape is what lets us choose a strategy for it.</figcaption>
     </figure>
   </div>
-  <div class="stats">
-    <div class="stat"><b>456</b><span>conference papers read</span></div>
-    <div class="stat"><b>4,256</b><span>extracted problem records</span></div>
-    <div class="stat"><b>1,038</b><span>problem entities after grouping</span></div>
-    <div class="stat"><b>3,700</b><span>ranked strategy entries</span></div>
+  <div class="stats" id="stats">
+    <button class="stat" type="button" data-panel="papers" aria-expanded="false" aria-controls="stat-panel"><b data-k="papers">–</b><span>conference papers read</span><span class="more">Details<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M4 6l4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span></button>
+    <button class="stat" type="button" data-panel="records" aria-expanded="false" aria-controls="stat-panel"><b data-k="records">–</b><span>extracted problem records</span><span class="more">Details<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M4 6l4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span></button>
+    <button class="stat" type="button" data-panel="entities" aria-expanded="false" aria-controls="stat-panel"><b data-k="entities">–</b><span>problem entities after grouping</span><span class="more">Details<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M4 6l4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span></button>
+    <button class="stat" type="button" data-panel="strategies" aria-expanded="false" aria-controls="stat-panel"><b data-k="strategies">–</b><span>ranked strategy entries</span><span class="more">Details<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M4 6l4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span></button>
   </div>
-  <p class="src">Counts come from the project's own files: the master records table, <span class="mono">problem_entities.json</span> and <span class="mono">entity_strategy_layer_v2.csv</span>.</p>
+  <div class="xpanel" id="stat-panel" role="region" aria-live="polite" hidden></div>
+  <p class="src" id="stage-line">Counts come from the project's own files: the master records table, <span class="mono">problem_entities.json</span> and <span class="mono">entity_strategy_layer_v2.csv</span>.</p>
 </header>
 
 <section id="objectives">
@@ -249,6 +310,56 @@ footer{border-top:1px solid var(--line);padding-block:2rem 3rem;font-size:.85rem
   </ol>
 </section>
 
+<section id="flow">
+  <span class="eyebrow">Query flow</span>
+  <h2>How a query is answered</h2>
+  <p>What happens between typing a description and seeing recommended strategies. Values are the defaults in the repository's retrieval and output scripts.</p>
+  <div class="flow">
+    <div class="stage">
+      <div class="stage-h"><span class="dot">A</span><div><small>Stage A</small><h3>Understand the query</h3></div></div>
+      <ol class="fsteps">
+        <li class="fstep fbox"><b>User text</b><span>A plain-English description of the optimisation problem.</span></li>
+        <li class="fstep fpair">
+          <div class="fbox"><b>Keyword search</b><span><code>BM25</code> · finds entities that share the query's words. Returns 20 candidates.</span></div>
+          <div class="fbox"><b>Meaning search</b><span><code>all-mpnet-base-v2</code> embeddings · finds entities with a similar meaning. Returns 20 candidates.</span></div>
+        </li>
+      </ol>
+    </div>
+    <div class="farrow" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 12h15m-5-5 5 5-5 5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+    <div class="stage">
+      <div class="stage-h"><span class="dot">B</span><div><small>Stage B</small><h3>Match to a problem</h3></div></div>
+      <ol class="fsteps">
+        <li class="fstep fbox"><b>Reciprocal rank fusion</b><span>Merges the keyword, meaning and paper-count rankings into one list.</span></li>
+        <li class="fstep fbox"><b>Shortlist of 10</b><span>Only the ten best merged candidates go forward.</span></li>
+        <li class="fstep fbox"><b>Cross-encoder re-score</b><span><code>cross-encoder/ms-marco-MiniLM-L-6-v2</code> reads the query and each candidate together, then adds a small bonus for entities backed by more papers: score + 0.5 × log(1 + papers).</span></li>
+        <li class="fstep fbox"><b>Margin check</b><span>The top candidate must beat the second by at least 1.0.</span></li>
+        <li class="fstep fpair">
+          <div class="fbox pass"><span class="lbl">pass</span><b>Mapped problem entity</b><span>The match goes on to Stage C.</span></div>
+          <div class="fbox fail"><span class="lbl">fail</span><b>Not mapped: logged for review</b><span>No answer is forced; the query is saved for the team.</span></div>
+        </li>
+      </ol>
+    </div>
+    <div class="farrow" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 12h15m-5-5 5 5-5 5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+    <div class="stage">
+      <div class="stage-h"><span class="dot">C</span><div><small>Stage C</small><h3>Recommend</h3></div></div>
+      <ol class="fsteps">
+        <li class="fstep fbox"><b>Look up the strategy table</b><span>Reads the matched entity's rows from the ranked strategy layer.</span></li>
+        <li class="fstep fbox"><b>Group by metric family</b><span>Results reported under different metrics are never compared.</span></li>
+        <li class="fstep fbox"><b>Rank within each family</b><span>First by whether the optimum status was reported, then by the share of reports where the optimum was found, then by papers reporting.</span></li>
+        <li class="fstep fbox out"><b>Output</b><span>The entity, match confidence (the margin), evidence strength (papers and description confidence), and up to 3 metric families × 5 strategies each.</span></li>
+      </ol>
+    </div>
+  </div>
+  <div class="planned">
+    <div class="planned-h"><span class="pill next">Planned</span>Not built yet. These steps are designed but not part of the system above.</div>
+    <div class="planned-grid">
+      <div class="fbox"><b>Landscape (ELA) matching</b><span>Measure the shape of the user's own objective function and match it to the reference library.</span></div>
+      <div class="fbox"><b>Run the recommendations</b><span>Run the recommended strategies with MEALPy and compare them with default settings.</span></div>
+      <div class="fbox"><b>Web interface</b><span>A form for entering a problem instead of the command-line demo.</span></div>
+    </div>
+  </div>
+</section>
+
 <section id="demo">
   <span class="eyebrow">Demonstration</span>
   <h2>What the system returns</h2>
@@ -263,16 +374,16 @@ footer{border-top:1px solid var(--line);padding-block:2rem 3rem;font-size:.85rem
   <div class="cols3">
     <div class="col"><h3><span class="pill done">Done</span> Core system</h3>
       <ul>
-        <li><strong>Extraction and cleaning</strong> of all paper tables</li>
-        <li><strong>Matching texts and embeddings</strong> for 4,256 records</li>
-        <li><strong>Entity grouping</strong> and entity descriptions</li>
-        <li><strong>Strategy ranking</strong> per metric family</li>
+        <li><strong>Extraction and cleaning</strong>: <span data-k="clean_records">–</span> records in the cleaned table</li>
+        <li><strong>Matching texts and embeddings</strong> for <span data-k="embedded">–</span> records</li>
+        <li><strong>Entity grouping</strong>: <span data-k="entities">–</span> entities with descriptions</li>
+        <li><strong>Strategy ranking</strong> per metric family: <span data-k="strategies">–</span> entries</li>
         <li><strong>Hybrid retrieval</strong> with confidence gate</li>
         <li><strong>Structured output</strong> and an evaluation suite</li>
       </ul></div>
     <div class="col"><h3><span class="pill now">In progress</span> More data</h3>
       <ul>
-        <li><strong>PReMI papers</strong>: 779 new records ingested into the master table; embeddings, grouping and ranking still to be rebuilt</li>
+        <li><strong>Rebuild on the new cleaned table</strong>: <span data-k="clean_new">–</span> records from <span data-k="clean_new_papers">–</span> papers, including the <span data-k="premi_clean">–</span> PReMI records, are cleaned but not yet in the master table, so matching text, embeddings, grouping and ranking are still to be run on them</li>
         <li><strong>Reusable ingestion step</strong> so teammates can add papers from PDFs or CSVs</li>
         <li><strong>Re-evaluation</strong> after the rebuild</li>
       </ul></div>
@@ -328,7 +439,271 @@ footer{border-top:1px solid var(--line);padding-block:2rem 3rem;font-size:.85rem
 
 <script>
 (function(){
-  /* ---- demo data: entities and strategies read from problem_entities_enriched.json and entity_strategy_layer_v2.csv ---- */
+  /* ---- site numbers: the output of tools/site_stats.py, pasted between the markers (or run it with --write) ---- */
+  var SITE_DATA = /* SITE_DATA_START */{
+ "as_of": "2026-10-25",
+ "generated": "2026-10-26",
+ "repo": {
+  "url": "https://github.com/Viritha-D/project_fyp",
+  "commit": "caa52e4 2026-10-25"
+ },
+ "papers": {
+  "value": 456,
+  "file": "papers_master_with_matching_text.csv",
+  "rule": "distinct Source_File (one PDF = one paper)",
+  "paper_id_stems": 459,
+  "distinct_titles": 455
+ },
+ "records": {
+  "value": 4256,
+  "file": "papers_master_with_matching_text.csv",
+  "committed": "2026-10-11",
+  "csv_url": "https://github.com/Viritha-D/project_fyp/blob/main/papers_master_with_matching_text.csv",
+  "columns": [
+   "paper_id",
+   "raw_paper_id",
+   "Category",
+   "Evaluation_Dataset",
+   "Environment",
+   "Target_Landscape",
+   "Winning_Strategy",
+   "Paper_Title",
+   "Authors",
+   "Year",
+   "Source_File",
+   "GECCO_Track",
+   "Industry",
+   "Problem_Context",
+   "Dataset_Name",
+   "Source_Platform",
+   "Benchmark_Name",
+   "Dimensionality",
+   "Modality",
+   "Separability",
+   "Landscape_Characteristics",
+   "Algorithm_Name",
+   "Population_Size",
+   "Max_Evaluations_or_Generations",
+   "Mutation_Rate",
+   "Crossover_Rate",
+   "Performance_Metric",
+   "Is_Optimal_Found",
+   "matching_text",
+   "language",
+   "matching_text_original",
+   "translated"
+  ],
+  "samples": [
+   {
+    "paper_id": "P2019_054_Ext_100",
+    "Year": "2019",
+    "Category": "Applied",
+    "Benchmark_Name": "MSTSP25",
+    "Algorithm_Name": "Crowding Genetic Algorithm (CGA)",
+    "Performance_Metric": "Fβ score",
+    "Is_Optimal_Found": "False"
+   },
+   {
+    "paper_id": "P2020_020_Ext_01",
+    "Year": "2020",
+    "Category": "Pure Math",
+    "Benchmark_Name": "Shifted Sphere Function (f1)",
+    "Algorithm_Name": "Local Search 1 (LS1)",
+    "Performance_Metric": "Average error avg",
+    "Is_Optimal_Found": "True"
+   },
+   {
+    "paper_id": "P2021_078_Ext_100",
+    "Year": "2021",
+    "Category": "Pure Math",
+    "Benchmark_Name": "F15 (CEC'2013 Niching Benchmark Suite)",
+    "Algorithm_Name": "NEA2",
+    "Performance_Metric": "Success Rate (SR)",
+    "Is_Optimal_Found": "False"
+   },
+   {
+    "paper_id": "P2022_185_Ext_01",
+    "Year": "2022",
+    "Category": "Pure Math",
+    "Benchmark_Name": "CEC 2022 benchmark set",
+    "Algorithm_Name": "jSObeE",
+    "Performance_Metric": "Best fitness value achieved",
+    "Is_Optimal_Found": "False"
+   },
+   {
+    "paper_id": "P2023_018_Ext_02",
+    "Year": "2023",
+    "Category": "Pure Math",
+    "Benchmark_Name": "Rastrigin",
+    "Algorithm_Name": "BSO-AL",
+    "Performance_Metric": "Mean fitness value achieved",
+    "Is_Optimal_Found": "True"
+   },
+   {
+    "paper_id": "P2024_395_Ext_01",
+    "Year": "2024",
+    "Category": "Applied",
+    "Benchmark_Name": "RSA-CRT (Software Implementation)",
+    "Algorithm_Name": "Voltage Glitching",
+    "Performance_Metric": "Success rate of glitch injection",
+    "Is_Optimal_Found": "True"
+   }
+  ]
+ },
+ "entities": {
+  "value": 1035,
+  "file": "problem_entities.json",
+  "committed": "2026-10-11",
+  "by_type": {
+   "single_function": 1024,
+   "named_subset": 8,
+   "suite": 3
+  },
+  "by_category": {
+   "Pure Math": 536,
+   "Applied": 499
+  },
+  "examples": [
+   {
+    "name": "CEC 2017 benchmark test suite",
+    "type": "suite",
+    "papers": 32,
+    "n_names": 17,
+    "names": [
+     "CEC 2017",
+     "CEC 2017 Benchmark Suite",
+     "CEC 2017 Constrained Real-Parameter Optimization Benchmark Suite",
+     "CEC 2017 Special Session and Competition on Real-Parameter Optimization",
+     "CEC 2017 Suite",
+     "CEC 2017 benchmark"
+    ]
+   },
+   {
+    "name": "Rastrigin",
+    "type": "single_function",
+    "papers": 11,
+    "n_names": 2,
+    "names": [
+     "Rastrigin",
+     "Rastrigin function"
+    ]
+   },
+   {
+    "name": "CEC 2017 Suite (f1, f4, f5, f10, f15, f18, f23)",
+    "type": "named_subset",
+    "papers": 1,
+    "n_names": 1,
+    "names": [
+     "CEC 2017 Suite (f1, f4, f5, f10, f15, f18, f23)"
+    ]
+   }
+  ]
+ },
+ "strategies": {
+  "value": 3700,
+  "file": "entity_strategy_layer_v2.csv",
+  "committed": "2026-10-11",
+  "entities_covered": 1021,
+  "example": {
+   "entity": "Rastrigin",
+   "metric_family": "Best/Mean Fitness or Error Value",
+   "total_rows": 12,
+   "rows": [
+    {
+     "rank": 1,
+     "strategy": "BSO-AL",
+     "papers_reporting": 1,
+     "reports_with_optimum_status": 1,
+     "pct_optimum_found": 100.0
+    },
+    {
+     "rank": 2,
+     "strategy": "Factored Evolutionary Algorithm (FEA) with PSO",
+     "papers_reporting": 1,
+     "reports_with_optimum_status": 1,
+     "pct_optimum_found": 0.0
+    },
+    {
+     "rank": 3,
+     "strategy": "Hybrid Factored Evolutionary Algorithm (FEA-H) with PSO",
+     "papers_reporting": 1,
+     "reports_with_optimum_status": 1,
+     "pct_optimum_found": 0.0
+    },
+    {
+     "rank": 4,
+     "strategy": "PSO with ANT and PatternSelection",
+     "papers_reporting": 1,
+     "reports_with_optimum_status": 1,
+     "pct_optimum_found": 0.0
+    },
+    {
+     "rank": 5,
+     "strategy": "Particle Swarm Optimization (PSO)",
+     "papers_reporting": 1,
+     "reports_with_optimum_status": 1,
+     "pct_optimum_found": 0.0
+    },
+    {
+     "rank": 6,
+     "strategy": "UES",
+     "papers_reporting": 1,
+     "reports_with_optimum_status": 1,
+     "pct_optimum_found": 0.0
+    }
+   ]
+  }
+ },
+ "stage": {
+  "embedded": 4256,
+  "embedding_model": "all-mpnet-base-v2",
+  "built_from": 4255,
+  "master_records": 4256,
+  "clean_file": "master_dataset_clean.csv",
+  "clean_committed": "2026-10-25",
+  "clean_records": 11342,
+  "clean_records_not_in_master": 6924,
+  "clean_papers_not_in_master": 970
+ },
+ "sources": [
+  {
+   "venue": "venue to be confirmed",
+   "name": null,
+   "papers": 456,
+   "records": 4256,
+   "years": "2015–2025"
+  },
+  {
+   "venue": "PReMI",
+   "name": "Pattern Recognition and Machine Intelligence",
+   "papers": 0,
+   "records": 0,
+   "years": null,
+   "not_in_master": {
+    "file": "master_dataset_clean.csv",
+    "records": 658,
+    "papers": 223,
+    "years": "2000–2024"
+   }
+  }
+ ],
+ "evaluation": {
+  "file": "part9_eval_results.json",
+  "committed": "2026-10-11",
+  "queries": 20,
+  "in_scope_scored": 12,
+  "in_scope_correct": 5,
+  "in_scope_unscored": 2,
+  "out_of_scope": 6,
+  "out_of_scope_rejected": 6,
+  "overall_correct_of_scored": [
+   11,
+   18
+  ]
+ }
+}/* SITE_DATA_END */;
+
+  /* ---- demo data: entities and strategies read from problem_entities.json and entity_strategy_layer_v2.csv ---- */
   var DEMOS=[
     {tab:'Rastrigin', query:'A test function with many regularly spaced local optima where the variables can be optimised separately.',
      name:'Rastrigin', kind:'single function', papers:11, conf:'high',
@@ -380,16 +755,123 @@ footer{border-top:1px solid var(--line);padding-block:2rem 3rem;font-size:.85rem
   });
   show(0);
 
+  /* ---- numbers and stat-card detail panels, all read from SITE_DATA ---- */
+  try{
+    var D=SITE_DATA;
+    var MONTHS=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+    function fmt(n){return n==null?'–':Number(n).toLocaleString('en-US')}
+    function day(s){var m=/^(\d{4})-(\d{2})-(\d{2})$/.exec(s||'');return m?(+m[3])+' '+MONTHS[+m[2]-1]+' '+m[1]:(s||'')}
+    function mono(t){return el('span','mono',t)}
+    function para(parts,c){var p=el('p',c);parts.forEach(function(x){p.appendChild(typeof x==='string'?document.createTextNode(x):x)});return p}
+    function bold(t){return el('b',null,t)}
+    function table(heads,rows,num,cls){
+      var w=el('div','tw'),t=el('table',cls),th=el('thead'),tr=el('tr');
+      heads.forEach(function(h,i){var c=el('th',num&&num[i]?'num':null,h);c.scope='col';tr.appendChild(c)});
+      th.appendChild(tr);t.appendChild(th);var tb=el('tbody');
+      rows.forEach(function(r){var row=el('tr');r.forEach(function(v,i){var c=el('td',num&&num[i]?'num':null);
+        if(v&&v.nodeType)c.appendChild(v);else c.textContent=v==null?'–':String(v);row.appendChild(c)});tb.appendChild(row)});
+      t.appendChild(tb);w.appendChild(t);return w;
+    }
+    function chips(list,extra){var u=el('ul','chips');list.forEach(function(x){u.appendChild(el('li',null,x))});if(extra)u.appendChild(el('li',null,extra));return u}
+    function pct(v){return v==null?'not reported':(Math.round(v*10)/10)+'%'}
+    var TYPE={single_function:'single function',named_subset:'named subset',suite:'suite'};
+    var premi=(D.sources||[]).filter(function(s){return s.venue==='PReMI'})[0];
+    var K={papers:D.papers.value,records:D.records.value,entities:D.entities.value,strategies:D.strategies.value,
+      embedded:D.stage.embedded,clean_records:D.stage.clean_records,clean_new:D.stage.clean_records_not_in_master,
+      clean_new_papers:D.stage.clean_papers_not_in_master,premi_clean:premi&&premi.not_in_master?premi.not_in_master.records:null};
+    Array.prototype.forEach.call(document.querySelectorAll('[data-k]'),function(e){e.textContent=fmt(K[e.getAttribute('data-k')])});
+
+    var st=D.stage, line=document.getElementById('stage-line'); line.textContent='';
+    [ 'As of '+day(D.as_of)+' (repository commit '+String(D.repo.commit).split(' ')[0]+'): entities and strategies built from '+
+      fmt(st.built_from)+' of '+fmt(st.master_records)+' records in the master table.' ].forEach(function(t){line.appendChild(document.createTextNode(t))});
+    if(st.clean_records_not_in_master){
+      line.appendChild(document.createTextNode(' A newer cleaned table, '));line.appendChild(mono(st.clean_file));
+      line.appendChild(document.createTextNode(' ('+day(st.clean_committed)+'), adds '+fmt(st.clean_records_not_in_master)+' records from '+
+        fmt(st.clean_papers_not_in_master)+' papers that are not yet embedded, grouped or ranked.'));
+    }
+
+    var PANELS={
+      papers:function(p){
+        p.appendChild(el('h3',null,'Papers read'));
+        p.appendChild(para([bold(fmt(D.papers.value)),' papers are in the master table, counted as distinct source PDFs (the ',mono('Source_File'),' column).']));
+        p.appendChild(para(['Papers were collected as PDFs in batches: per-year source files first, then later additions. A language model read each paper and filled a fixed extraction schema (problem, landscape traits, algorithm, parameters, metric and outcome), and the rows were cleaned and merged into the master table.']));
+        p.appendChild(el('h4',null,'Sources'));
+        p.appendChild(table(['Source','Papers','Records','Years','About'],(D.sources||[]).map(function(s){
+          var about=s.name||'Venue labels for these rows are still being confirmed; they are shown as one group until then.';
+          if(s.not_in_master)about+='. Not yet in the master table: '+fmt(s.not_in_master.records)+' records from '+fmt(s.not_in_master.papers)+' papers are in '+s.not_in_master.file+'.';
+          return [s.venue==='venue to be confirmed'?'Venue to be confirmed':s.venue,fmt(s.papers),fmt(s.records),s.years||'–',about];
+        }),[0,1,1,0,0]));
+      },
+      records:function(p){
+        var R=D.records;
+        p.appendChild(el('h3',null,'Extracted problem records'));
+        p.appendChild(para(['One record is one problem–algorithm–result row extracted from a paper: the problem tested, the algorithm run on it, the metric reported and whether the optimum was found. A paper with several result tables gives many records, which is how ',fmt(D.papers.value),' papers give ',bold(fmt(R.value)),' records.']));
+        p.appendChild(el('h4',null,'Columns of the master table ('+R.columns.length+')'));
+        p.appendChild(chips(R.columns));
+        p.appendChild(el('h4',null,'Six rows from the table'));
+        p.appendChild(table(['Paper ID','Year','Category','Benchmark','Algorithm','Metric','Optimum found'],R.samples.map(function(s){
+          return [s.paper_id,s.Year,s.Category,s.Benchmark_Name,s.Algorithm_Name,s.Performance_Metric,s.Is_Optimal_Found==='True'?'yes':s.Is_Optimal_Found==='False'?'no':s.Is_Optimal_Found];
+        }),null,'wide'));
+        if(R.csv_url){var a=el('a',null,R.file);a.href=R.csv_url;a.target='_blank';a.rel='noopener';
+          p.appendChild(para(['Full table on GitHub: ',a,' (updated '+day(R.committed)+').'],'src'));}
+        else p.appendChild(para([mono(R.file),' is not published in the repo.'],'src'));
+      },
+      entities:function(p){
+        var E=D.entities;
+        p.appendChild(el('h3',null,'Problem entities'));
+        p.appendChild(para(['A problem entity is one benchmark problem that many papers describe, often under different names. It can be a single function (such as Rastrigin), a suite (such as the CEC 2017 test suite) or a named subset of a suite. ',bold(fmt(E.value)),' entities are in ',mono(E.file),'.']));
+        var c=el('div','counts');
+        Object.keys(E.by_type).forEach(function(k){var d=el('div');d.appendChild(el('b',null,fmt(E.by_type[k])));d.appendChild(el('span',null,TYPE[k]||k));c.appendChild(d)});
+        Object.keys(E.by_category).forEach(function(k){var d=el('div');d.appendChild(el('b',null,fmt(E.by_category[k])));d.appendChild(el('span',null,k+' entities'));c.appendChild(d)});
+        p.appendChild(c);
+        p.appendChild(el('h4',null,'How they were built'));
+        p.appendChild(para(['Records were grouped by name-key rules (for example, every spelling of one suite maps to one key) plus clusters of their embeddings. The grouping was checked against 38 hand-labelled papers, with agreement 1.0.']));
+        p.appendChild(el('h4',null,'Examples'));
+        p.appendChild(table(['Entity','Type','Papers','Names used in papers'],E.examples.map(function(x){
+          return [x.name,TYPE[x.type]||x.type,fmt(x.papers),chips(x.names,x.n_names>x.names.length?'+'+(x.n_names-x.names.length)+' more':null)];
+        }),[0,0,1,0]));
+      },
+      strategies:function(p){
+        var S=D.strategies,X=S.example;
+        p.appendChild(el('h3',null,'Ranked strategy entries'));
+        p.appendChild(para(['One entry is one strategy for one entity under one metric family. It records how many papers report the strategy, the share of those reports where the optimum was found, and the strategy’s rank within that metric. ',bold(fmt(S.value)),' entries cover ',fmt(S.entities_covered),' entities.']));
+        p.appendChild(para(['Ranks are only within a metric because metrics measure different things: a mean error and a success rate cannot be put on one scale, so a strategy that ranks first on one says nothing about a strategy ranked on the other.']));
+        p.appendChild(el('h4',null,'Example: '+X.entity+' · '+X.metric_family+(X.total_rows>X.rows.length?' (first '+X.rows.length+' of '+X.total_rows+')':'')));
+        p.appendChild(table(['Rank','Strategy','Papers reporting','Reports with optimum status','Optimum found'],X.rows.map(function(r){
+          return [r.rank,r.strategy,fmt(r.papers_reporting),fmt(r.reports_with_optimum_status),pct(r.pct_optimum_found)];
+        }),[1,0,1,1,1]));
+        p.appendChild(para(['Most entries rest on a single paper, so the page always shows the paper count next to a rank.'],'src'));
+      }
+    };
+
+    var xp=document.getElementById('stat-panel'), btns=document.querySelectorAll('#stats button.stat'), openKey=null;
+    function setOpen(k){
+      openKey=k;
+      Array.prototype.forEach.call(btns,function(b){b.setAttribute('aria-expanded',b.getAttribute('data-panel')===k?'true':'false')});
+      xp.textContent='';
+      if(!k){xp.hidden=true;return}
+      PANELS[k](xp);
+      var close=el('button','close','Close details');close.type='button';
+      close.addEventListener('click',function(){var b=document.getElementById('stat-btn-'+k);setOpen(null);if(b)b.focus()});
+      xp.appendChild(close);
+      xp.setAttribute('aria-labelledby','stat-btn-'+k);xp.hidden=false;
+    }
+    Array.prototype.forEach.call(btns,function(b){
+      var k=b.getAttribute('data-panel');b.id='stat-btn-'+k;
+      b.addEventListener('click',function(){setOpen(openKey===k?null:k)});
+    });
+    document.addEventListener('keydown',function(e){
+      if(e.key==='Escape'&&openKey){var b=document.getElementById('stat-btn-'+openKey);setOpen(null);if(b)b.focus()}
+    });
+  }catch(e){}
+
   /* ---- team ---- */
-  var TEAM=[
-    {name:'Darshan R', role:'Team 97'},
-    {name:'Team member name', role:'Role and roll number to be added', todo:true},
-    {name:'Team member name', role:'Role and roll number to be added', todo:true}
-  ];
+  var TEAM=['Darshan R','Sanjesh Nandha','Adarsh Prakash','Daggubati Viritha','Ananthakrishnan'];
   var grid=document.getElementById('team-grid');
-  TEAM.forEach(function(p){
-    var c=el('div','person'+(p.todo?' todo':'')); var av=el('div','av',p.todo?'+':p.name.split(' ').map(function(w){return w[0]}).join('').slice(0,2));
-    c.appendChild(av); c.appendChild(el('b',null,p.name)); c.appendChild(el('span',null,p.role)); grid.appendChild(c);
+  TEAM.forEach(function(name){
+    var c=el('div','person');
+    c.appendChild(el('div','av',name.split(' ').map(function(w){return w[0]}).join('').slice(0,2).toUpperCase()));
+    c.appendChild(el('b',null,name)); grid.appendChild(c);
   });
 
   /* ---- landscape: banded contour map of the 2-variable Rastrigin function ---- */
