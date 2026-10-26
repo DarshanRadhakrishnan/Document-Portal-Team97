@@ -267,6 +267,24 @@ def main():
         evaluation["overall_correct_of_scored"] = [evaluation["in_scope_correct"] + evaluation["out_of_scope_rejected"],
                                                    evaluation["in_scope_scored"] + evaluation["out_of_scope"]]
 
+    # ---- cleaned corpus by year and venue (the Conference column of the cleaned table) ----
+    corpus = None
+    if clean:
+        venues = [v for v, _ in Counter(r["Conference"] for r in clean).most_common()]
+        by_year = defaultdict(Counter)
+        for r in clean:
+            y = r["Year"]
+            by_year["≤2014" if y.isdigit() and int(y) <= 2014 else y][r["Conference"]] += 1
+        corpus = {
+            "file": CLEAN, "committed": committed(CLEAN), "records": len(clean),
+            "by_category": dict(Counter(r["Category"] for r in clean).most_common()),
+            "venues": venues,
+            "by_venue": {v: {"records": sum(1 for r in clean if r["Conference"] == v),
+                             "years": year_span(r["Year"] for r in clean if r["Conference"] == v)} for v in venues},
+            "by_year": [{"year": y, **{v: by_year[y][v] for v in venues}}
+                        for y in sorted(by_year, key=lambda y: (y != "≤2014", y))],
+        }
+
     data = {
         "as_of": max(filter(None, [committed(f) for f in [MASTER, ent_file, STRATEGIES, CLEAN]])),
         "generated": date.today().isoformat(),
@@ -289,6 +307,7 @@ def main():
                   "clean_papers_not_in_master": len({r["Source_File"] for r in clean_new})},
         "sources": sources,
         "evaluation": evaluation,
+        "corpus": corpus,
     }
     # The report goes to stderr so that stdout is only the page block; venue evidence and the
     # pending group names never reach the page, because they name venues VENUE_MAP has not confirmed.

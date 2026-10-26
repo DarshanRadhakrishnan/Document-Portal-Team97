@@ -8,6 +8,9 @@
   --bg:#F4F6F9; --surface:#FFFFFF; --ink:#13202C; --muted:#566677; --line:#D8DFE6;
   --accent:#0A6B73; --accent-ink:#FFFFFF; --tint:#E1F0F1;
   --warn:#7A5200; --warn-bg:#FBF1DC; --good:#1E6B43; --good-bg:#E4F3EA;
+  --sa-bg:#E6EEF9; --sa-line:#9DB7DD;
+  /* chart series: dataviz reference palette, validated on this page's light surface */
+  --v1:#2a78d6; --v2:#eb6834; --v3:#1baf7a; --v4:#eda100; --v5:#e87ba4;
   --f-display:'Source Serif 4',Georgia,'Times New Roman',serif;
   --f-body:'IBM Plex Sans',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;
   --f-mono:'IBM Plex Mono',ui-monospace,Menlo,Consolas,monospace;
@@ -17,12 +20,14 @@
     --bg:#0D141B; --surface:#141E27; --ink:#E6ECF1; --muted:#8FA1B1; --line:#25323E;
     --accent:#5CC8C0; --accent-ink:#06201E; --tint:#12302F;
     --warn:#E3B55A; --warn-bg:#2A2312; --good:#6FD39B; --good-bg:#13281D; color-scheme:dark;
+    --sa-bg:#14243A; --sa-line:#2F4D75; --v1:#3987e5; --v2:#d95926; --v3:#199e70; --v4:#c98500; --v5:#d55181;
   }
 }
 :root[data-theme="dark"]{
   --bg:#0D141B; --surface:#141E27; --ink:#E6ECF1; --muted:#8FA1B1; --line:#25323E;
   --accent:#5CC8C0; --accent-ink:#06201E; --tint:#12302F;
   --warn:#E3B55A; --warn-bg:#2A2312; --good:#6FD39B; --good-bg:#13281D; color-scheme:dark;
+    --sa-bg:#14243A; --sa-line:#2F4D75; --v1:#3987e5; --v2:#d95926; --v3:#199e70; --v4:#c98500; --v5:#d55181;
 }
 *{box-sizing:border-box}
 html{scroll-behavior:smooth;scroll-padding-top:72px}
@@ -164,6 +169,101 @@ button.stat[aria-expanded="true"] .more svg{transform:rotate(180deg)}
   .planned-grid{grid-template-columns:minmax(0,1fr)}
 }
 
+/* system overview (Fig. 1 of the progress report) */
+.sysmap{margin:1.4rem 0 2rem;display:grid;gap:1rem}
+.lane{border:1px solid var(--line);border-radius:12px;padding:1rem;background:var(--surface);min-width:0}
+.lane-h{display:block;font:500 .8125rem var(--f-mono);color:var(--muted);margin-bottom:.8rem}
+.sys-row{list-style:none;margin:0;padding:0;display:grid;gap:1.6rem;grid-template-columns:repeat(var(--n),minmax(0,1fr))}
+.sys-row>li{position:relative;min-width:0}
+.sys-row>li+li::before{content:"";position:absolute;left:-1.3rem;top:1.6rem;width:.95rem;border-top:1.5px solid var(--accent)}
+.sys-row>li+li::after{content:"";position:absolute;left:-.45rem;top:calc(1.6rem - 4px);border:4px solid transparent;border-left:6px solid var(--accent);border-right:0}
+.sbox{border:1px solid var(--line);border-radius:8px;padding:.55rem .65rem;font-size:.8125rem;line-height:1.4;color:var(--ink)}
+.sbox b{display:block;font-size:.875rem;font-weight:600}
+.sbox.a{background:var(--sa-bg);border-color:var(--sa-line)}
+.sbox.b{background:var(--good-bg);border-color:color-mix(in srgb,var(--good) 45%,transparent)}
+.sbox.u{background:var(--warn-bg);border-color:color-mix(in srgb,var(--warn) 45%,transparent)}
+.sbranch{margin-top:1.4rem;position:relative}
+.sbranch::before{content:"";position:absolute;left:50%;top:-1.25rem;height:1rem;border-left:1.5px solid var(--accent)}
+.sbranch::after{content:"";position:absolute;left:calc(50% - 4px);top:-.4rem;border:4px solid transparent;border-top:6px solid var(--accent);border-bottom:0}
+.legend{display:flex;flex-wrap:wrap;gap:.4rem 1.1rem;font-size:.8125rem;color:var(--muted);margin:0;padding:0;list-style:none}
+.legend li{display:inline-flex;align-items:center;gap:.4rem}
+.legend i{width:12px;height:12px;border-radius:3px;display:inline-block;border:1px solid var(--line)}
+@media (max-width:980px){
+  .sys-row{grid-template-columns:minmax(0,1fr)}
+  .sys-row>li+li::before{left:50%;top:-1.35rem;width:0;height:1.05rem;border-top:0;border-left:1.5px solid var(--accent)}
+  .sys-row>li+li::after{left:calc(50% - 4px);top:-.45rem;border:4px solid transparent;border-top:6px solid var(--accent);border-bottom:0}
+}
+
+/* report sections */
+.sub{margin-top:2.4rem}
+.sub>h3{margin-bottom:.6rem}
+.lead-list{margin:0 0 1rem;padding-left:1.2rem;display:grid;gap:.45rem;font-size:.95rem;max-width:80ch}
+.lead-list b{font-weight:600}
+.facts{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:.8rem;margin:1rem 0 1.4rem}
+.fact{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:.8rem 1rem}
+.fact b{display:block;font:600 1.35rem/1.15 var(--f-display)}
+.fact span{font-size:.8125rem;color:var(--muted)}
+.grid2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1rem;align-items:start}
+.tcap{font:600 .9rem var(--f-body);margin:0 0 .5rem}
+.tnote{font-size:.8125rem;color:var(--muted);margin:.5rem 0 0}
+.kbv2{margin-top:1.4rem;border:1px dashed var(--line);border-radius:12px;padding:.9rem 1rem;background:transparent}
+.kbv2 .eyebrow{margin-bottom:.6rem}
+.mini{display:flex;flex-wrap:wrap;gap:.5rem 1.6rem}
+.mini div b{font:600 1.25rem/1.2 var(--f-display);margin-right:.35rem}
+.mini div span{font-size:.8125rem;color:var(--muted)}
+.cardlist{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1rem}
+.cardlist .card ul{margin:.4rem 0 0;padding-left:1.1rem;font-size:.875rem;color:var(--muted);display:grid;gap:.3rem}
+.formula{font-family:var(--f-mono);font-size:.875rem;background:var(--bg);border:1px solid var(--line);border-radius:6px;padding:.4rem .6rem;display:inline-block;margin:.4rem 0;overflow-wrap:anywhere}
+.refs{margin:0;padding-left:1.4rem;display:grid;gap:.4rem;font-size:.875rem;color:var(--muted);max-width:90ch}
+.refs i{color:var(--ink);font-style:normal}
+
+/* charts: HTML bars, a hover tooltip on every mark, and a table view under each chart */
+figure.chart{margin:0;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:1rem 1.1rem;min-width:0}
+.ch-t{font:600 .95rem var(--f-body);margin:0}
+.ch-s{font-size:.8125rem;color:var(--muted);margin:.15rem 0 .9rem}
+figure.chart figcaption{font-size:.8125rem;color:var(--muted);margin-top:.8rem}
+.hb{display:grid;gap:2px}
+.hb-row{display:grid;grid-template-columns:minmax(6.5rem,36%) minmax(0,1fr);align-items:center;gap:.6rem;padding:2px 4px;border-radius:4px}
+.hb-row:hover{background:var(--bg)}
+.hb-l{font-size:.8125rem;line-height:1.25;text-align:right;color:var(--ink);overflow-wrap:anywhere}
+.hb-t{position:relative;display:flex;align-items:center;gap:.4rem;min-width:0;height:22px}
+.hb-b{height:14px;background:var(--accent);border-radius:0 4px 4px 0;flex:none}
+.hb-b.dim{background:var(--muted)}
+.hb-v{font-size:.8125rem;color:var(--muted);font-variant-numeric:tabular-nums;white-space:nowrap;position:relative;z-index:1;background:var(--surface);padding:0 3px;border-radius:3px}
+.hb-ref{position:absolute;top:-2px;bottom:-2px;border-left:1.5px solid var(--ink);pointer-events:none}
+.hb-refl{position:absolute;bottom:2px;transform:translateX(-50%);white-space:nowrap;font:500 .8125rem var(--f-mono);color:var(--ink)}
+.hb-head:hover{background:none}
+.cc{display:grid;grid-template-columns:2.6rem minmax(0,1fr);gap:.5rem}
+.cc-y{position:relative;height:var(--h)}
+.cc-y span{position:absolute;right:0;transform:translateY(50%);font-size:.8125rem;color:var(--muted);font-variant-numeric:tabular-nums}
+.cc-p{position:relative;height:var(--h);border-bottom:1px solid var(--muted)}
+.cc-g{position:absolute;left:0;right:0;border-top:1px solid var(--line)}
+.cc-cols{position:absolute;inset:0;display:grid;grid-template-columns:repeat(var(--n),minmax(0,1fr));align-items:end}
+.cc-col{display:flex;flex-direction:column-reverse;align-items:center;height:100%;min-height:0;justify-content:flex-start;cursor:default;border-radius:4px}
+.cc-col:hover{background:color-mix(in srgb,var(--bg) 70%,transparent)}
+.cc-seg{width:min(24px,70%);flex:none}
+.cc-seg+.cc-seg{margin-bottom:2px}
+.cc-seg.top{border-radius:4px 4px 0 0}
+.cc-cap{font-size:.8125rem;color:var(--muted);margin-bottom:.2rem;font-variant-numeric:tabular-nums;flex:none}
+.cc-x{display:grid;grid-template-columns:repeat(var(--n),minmax(0,1fr));margin-left:3.1rem;margin-top:.3rem}
+.cc-x span{font-size:.8125rem;color:var(--muted);text-align:center}
+.cc-xt{font-size:.8125rem;color:var(--muted);text-align:center;margin:.2rem 0 0 3.1rem}
+details.tv{margin-top:.8rem}
+details.tv summary{cursor:pointer;font:500 .8125rem var(--f-body);color:var(--accent);width:max-content}
+details.tv .tw{margin-top:.6rem}
+details.tv table{min-width:0}
+details.tv td,details.tv th{padding:.4rem .7rem;font-size:.8125rem}
+.tip{position:fixed;z-index:60;pointer-events:none;background:var(--ink);color:var(--surface);font-size:.8125rem;line-height:1.4;padding:.45rem .6rem;border-radius:6px;max-width:260px;white-space:pre-line;box-shadow:0 4px 14px rgba(0,0,0,.18)}
+.tip[hidden]{display:none}
+@media (max-width:860px){
+  .grid2,.cardlist{grid-template-columns:minmax(0,1fr)}
+  .cc-x span:nth-child(even){visibility:hidden}
+}
+@media (max-width:560px){
+  .hb-row{grid-template-columns:minmax(0,1fr);gap:.1rem;padding:4px}
+  .hb-l{text-align:left}
+}
+
 /* demo */
 .tabs{display:flex;flex-wrap:wrap;gap:.5rem;margin-bottom:1.1rem}
 .tab{font:500 .88rem var(--f-body);padding:.5rem .9rem;border-radius:8px;border:1px solid var(--line);background:var(--surface);color:var(--muted);cursor:pointer}
@@ -228,8 +328,9 @@ footer{border-top:1px solid var(--line);padding-block:2rem 3rem;font-size:.85rem
 <div class="bar"><div class="bar-in">
   <a class="brand" href="#top">EA Benchmark Selection</a>
   <nav class="nav" aria-label="Sections">
-    <a href="#objectives">Objectives</a><a href="#problem">Problem</a><a href="#method">Methodology</a>
-    <a href="#flow">Query flow</a><a href="#demo">Demonstration</a><a href="#progress">Progress</a><a href="#docs">Documentation</a><a href="#team">Team</a>
+    <a href="#objectives">Objectives</a><a href="#problem">Problem</a><a href="#method">Method</a>
+    <a href="#data">Data</a><a href="#corpus">Corpus</a><a href="#kb">Knowledge base</a><a href="#flow">Query flow</a>
+    <a href="#eval">Evaluation</a><a href="#demo">Demo</a><a href="#progress">Progress</a><a href="#docs">Docs</a><a href="#team">Team</a>
   </nav>
   <a class="gh" href="https://github.com/Viritha-D/project_fyp" target="_blank" rel="noopener">GitHub</a>
 </div></div>
@@ -239,11 +340,12 @@ footer{border-top:1px solid var(--line);padding-block:2rem 3rem;font-size:.85rem
 <header class="hero">
   <div class="hero-grid">
     <div>
-      <span class="eyebrow">Final-year project · Team 97</span>
+      <span class="eyebrow">Final-year project 23CSE498 · Team 97</span>
       <h1>Evolutionary Algorithm Benchmark Selection System</h1>
       <p class="lede">Describe your optimisation problem in plain words. The system finds the closest benchmark problem in a knowledge base mined from conference papers, tells you how sure it is, and lists the evolutionary strategies that were reported on it.</p>
       <div class="meta">
         <span><b>Amrita Vishwa Vidyapeetham</b></span>
+        <span>Dept. of Computer Science and Engineering, Amrita School of Engineering, Coimbatore</span>
         <span>Guide: <b>Dr. Ritwik M.</b></span>
       </div>
       <div class="actions">
@@ -256,7 +358,8 @@ footer{border-top:1px solid var(--line);padding-block:2rem 3rem;font-size:.85rem
       <figcaption>Rastrigin function in two variables: regularly spaced local optima. Knowing a problem's landscape is what lets us choose a strategy for it.</figcaption>
     </figure>
   </div>
-  <div class="stats" id="stats">
+  <span class="eyebrow" style="margin:2.6rem 0 0">Published knowledge base · kb-v1 · computed from the repository files</span>
+  <div class="stats" id="stats" style="margin-top:.8rem">
     <button class="stat" type="button" data-panel="papers" aria-expanded="false" aria-controls="stat-panel"><b data-k="papers">–</b><span>conference papers read</span><span class="more">Details<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M4 6l4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span></button>
     <button class="stat" type="button" data-panel="records" aria-expanded="false" aria-controls="stat-panel"><b data-k="records">–</b><span>extracted problem records</span><span class="more">Details<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M4 6l4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span></button>
     <button class="stat" type="button" data-panel="entities" aria-expanded="false" aria-controls="stat-panel"><b data-k="entities">–</b><span>problem entities after grouping</span><span class="more">Details<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M4 6l4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span></button>
@@ -264,6 +367,17 @@ footer{border-top:1px solid var(--line);padding-block:2rem 3rem;font-size:.85rem
   </div>
   <div class="xpanel" id="stat-panel" role="region" aria-live="polite" hidden></div>
   <p class="src" id="stage-line">Counts come from the project's own files: the master records table, <span class="mono">problem_entities.json</span> and <span class="mono">entity_strategy_layer_v2.csv</span>.</p>
+  <div class="kbv2">
+    <span class="eyebrow">Current build · kb-v2 · from the progress report, October 2026</span>
+    <div class="mini">
+      <div><b>1,494</b><span>source papers</span></div>
+      <div><b>11,342</b><span>records</span></div>
+      <div><b>3,089</b><span>benchmark entities</span></div>
+      <div><b>10,069</b><span>strategy rows</span></div>
+      <div><b>5</b><span>venues: GECCO, CEC, PReMI, FOGA, PPSN</span></div>
+    </div>
+    <p class="src">The cleaned kb-v2 table is in the repository as <span class="mono">master_dataset_clean.csv</span>; the kb-v2 entity and strategy files are not published there yet, so the cards above describe kb-v1. <a href="#kb">Compare the two builds</a>.</p>
+  </div>
 </header>
 
 <section id="objectives">
@@ -274,7 +388,7 @@ footer{border-top:1px solid var(--line);padding-block:2rem 3rem;font-size:.85rem
     <div class="card"><h3>Match a problem to a benchmark</h3><p>Take a user's plain-language description and find the closest known problem, instead of asking for exact function names.</p></div>
     <div class="card"><h3>Rank strategies by evidence</h3><p>For each problem, list the strategies reported on it, grouped by performance metric and ordered by how much evidence supports them.</p></div>
     <div class="card"><h3>Be honest about confidence</h3><p>Report how sure the match is separately from how many papers back the answer, and decline to answer when the match is weak.</p></div>
-    <div class="card" style="grid-column:1/-1"><h3>Grow beyond text</h3><p>Add matching on the measured shape of the user's objective function (landscape analysis), run the recommended strategies, and put it all behind a simple interface.</p></div>
+    <div class="card" style="grid-column:1/-1"><h3>Grow beyond text</h3><p>Return the right benchmark and its standard datasets to EvoLabs, the application that runs the algorithms, and add matching on the measured shape of the user's objective function (landscape analysis).</p></div>
   </div>
 </section>
 
@@ -292,12 +406,50 @@ footer{border-top:1px solid var(--line);padding-block:2rem 3rem;font-size:.85rem
       <li><b>Missing details.</b>Many papers leave out parameters such as population size; where we fill in a standard default, it is treated as a default, not as a finding.</li>
     </ul>
   </div>
+  <div class="sub">
+    <h3>Where this fits</h3>
+    <div class="cardlist">
+      <div class="card"><h3>Algorithm selection</h3><p>Rice's framework maps problem features to the algorithm expected to do best. For continuous problems the features usually come from Exploratory Landscape Analysis (ELA), which needs samples of the objective function. This system works one step earlier, from a description, and uses the literature as its labelled library.</p></div>
+      <div class="card"><h3>Benchmarking platforms</h3><p>COCO and IOHprofiler standardise benchmarking, and DEAP, jMetal and pymoo provide algorithm implementations. They expect the user to name the benchmark and do not explain why a benchmark suits a real problem.</p></div>
+      <div class="card"><h3>Extraction and retrieval</h3><p>Large language models can extract structured records from scientific text when held to a schema; this project uses Gemini. Search combines BM25, dense sentence embeddings, reciprocal rank fusion and cross-encoder re-ranking.</p></div>
+    </div>
+  </div>
 </section>
 
 <section id="method">
   <span class="eyebrow">Methodology</span>
   <h2>From a paper PDF to a ranked recommendation</h2>
   <p>The pipeline runs in eight stages. Each stage writes a file the next one reads, so every result can be traced back to the papers behind it.</p>
+  <figure class="sysmap" aria-label="Implemented system: offline knowledge-base build and online answering">
+    <div class="lane">
+      <span class="lane-h">Offline: building the knowledge base</span>
+      <ol class="sys-row" style="--n:6">
+        <li><div class="sbox a"><b>Conference PDFs</b>GECCO, CEC, FOGA, PPSN, PReMI</div></li>
+        <li><div class="sbox a"><b>LLM extraction</b>Gemini, whole PDF, JSON schema</div></li>
+        <li><div class="sbox a"><b>Validation &amp; flattening</b>27 columns</div>
+          <div class="sbranch sbox a"><b>Dataset &amp; domain classification</b>Tiers 1–4, reports</div></li>
+        <li><div class="sbox b"><b>Consolidation &amp; cleaning</b>11,342 records</div></li>
+        <li><div class="sbox b"><b>Search text</b>MPNet embeddings, BM25 index</div></li>
+        <li><div class="sbox b"><b>Entity resolution</b>3,089 benchmark entities</div>
+          <div class="sbranch sbox b"><b>Knowledge base</b>entities, aliases, evidence, conflicts, strategies</div></li>
+      </ol>
+    </div>
+    <div class="lane">
+      <span class="lane-h">Online: answering a user's problem description</span>
+      <ol class="sys-row" style="--n:4">
+        <li><div class="sbox u"><b>User problem description</b>plain text</div></li>
+        <li><div class="sbox b"><b>Hybrid search</b>BM25 + dense → RRF → cross-encoder → margin test</div></li>
+        <li><div class="sbox u"><b>Answer</b>matched benchmark with match confidence, evidence, conflicts and strategies by metric, or “no confident match”</div></li>
+        <li><div class="sbox b"><b>Refusals logged</b>for review</div></li>
+      </ol>
+    </div>
+    <ul class="legend">
+      <li><i style="background:var(--sa-bg);border-color:var(--sa-line)"></i>Stage A: extraction and classification</li>
+      <li><i style="background:var(--good-bg)"></i>Stage B: corpus, knowledge base and search</li>
+      <li><i style="background:var(--warn-bg)"></i>What the user provides and receives</li>
+    </ul>
+    <figcaption class="src">The implemented system (Fig. 1 of the progress report). The numbers are those of the current build, kb-v2.</figcaption>
+  </figure>
   <ol class="steps">
     <li><span class="dot">1</span><div><h3>Extract <span class="tag">LLM + fixed schema</span></h3><p>A language model reads each paper and fills a fixed set of fields: problem, landscape traits, algorithm, parameters, performance metric and outcome.</p></div></li>
     <li><span class="dot">2</span><div><h3>Clean <span class="tag">Python · Pandas</span></h3><p>Placeholders are standardised, duplicate records removed, and unreported numeric parameters set to standard defaults that stay marked as defaults.</p></div></li>
@@ -310,18 +462,193 @@ footer{border-top:1px solid var(--line);padding-block:2rem 3rem;font-size:.85rem
   </ol>
 </section>
 
+<section id="data">
+  <span class="eyebrow">Data</span>
+  <h2>From conference papers to structured records</h2>
+  <p>Whole papers are read by a language model into a fixed, validated schema, one record per algorithm and benchmark pair. The dataset names they report are then sorted into tiers so they can be counted.</p>
+
+  <div class="sub">
+    <h3>Extraction procedure</h3>
+    <ul class="lead-list">
+      <li><b>Whole papers.</b> Each PDF is uploaded whole to the Gemini File API and processed in one call at temperature 0.1, which keeps result tables, experimental settings and problem definitions together.</li>
+      <li><b>No guessing.</b> The prompt asks for null wherever the paper states nothing, a synthetic-benchmark or real-world label for each study, one entry for every algorithm and benchmark pair, and fixed rules for modality and separability.</li>
+      <li><b>Schema-checked.</b> A Pydantic model is passed as the response schema, so malformed output is rejected before it is stored.</li>
+      <li><b>Robust batches.</b> The batch processor skips papers already extracted, so interrupted runs resume; it rate-limits requests, retries with exponential back-off, rotates API keys when quotas run out and writes a report per run. Unit tests cover valid, invalid and round-trip cases for every schema model.</li>
+      <li><b>One row per pair.</b> The nested answer is flattened into a 27-column table: a paper testing four algorithms on six problems gives 24 rows. The year of a PDF's folder overrides the year the model reads from the paper.</li>
+    </ul>
+    <p class="tcap">Extraction schema: one record per (algorithm, benchmark) pair</p>
+    <div class="tw"><table>
+      <thead><tr><th>Group</th><th>Fields</th><th>Allowed values</th></tr></thead>
+      <tbody>
+        <tr><td>Identity</td><td>paper ID, year, source file, title, authors, track</td><td>—</td></tr>
+        <tr><td>Domain</td><td>category, industry, problem context</td><td>Pure Math / Applied</td></tr>
+        <tr><td>Dataset</td><td>dataset name, source platform, evaluation dataset</td><td>free text</td></tr>
+        <tr><td>Landscape</td><td>benchmark name, dimensionality, modality, separability, characteristics</td><td>Unimodal / Multimodal; Separable / Non-separable</td></tr>
+        <tr><td>Strategy</td><td>algorithm, population size, evaluations or generations, mutation rate, crossover rate</td><td>numbers or default</td></tr>
+        <tr><td>Outcome</td><td>performance metric, optimum found</td><td>True / False</td></tr>
+      </tbody>
+    </table></div>
+    <div class="facts">
+      <div class="fact"><b>788 → 6,725</b><span>GECCO 2020–2026 papers processed and records produced (761 unique papers after duplicate files were removed)</span></div>
+      <div class="fact"><b>3,343</b><span>distinct algorithm names in the cleaned corpus</span></div>
+      <div class="fact"><b>3,374</b><span>distinct benchmark names in the cleaned corpus</span></div>
+    </div>
+    <div class="grid2">
+      <figure class="chart" id="ch-unreported"></figure>
+      <figure class="chart" id="ch-algos"></figure>
+    </div>
+  </div>
+
+  <div class="sub">
+    <h3>Dataset and domain classification</h3>
+    <p>Free-text dataset names vary widely, so a rule-based classification makes them countable. It works in four tiers, each an ordered list of regular expressions where the first matching rule wins.</p>
+    <div class="tw"><table>
+      <thead><tr><th>Tier</th><th>What it captures</th></tr></thead>
+      <tbody>
+        <tr><td>1</td><td>Datasets used by two or more papers, counted per distinct paper and split into Applied and Theory use.</td></tr>
+        <tr><td>2</td><td>Datasets used by a single paper, grouped into 12 benchmark families (CEC, BBOB/COCO, DTLZ, ZDT, WFG, TSP/routing, program synthesis, image, OpenML/UCI, classic functions, RL environments, custom/simulated) plus a residual “Other / domain-specific” class.</td></tr>
+        <tr><td>3</td><td>The residual class split into program-synthesis benchmarks, bit-string/Boolean problems, RL/game environments, problem-instance libraries, opaque labels, pure-math test functions and genuine real-world datasets.</td></tr>
+        <tr><td>4</td><td>The application domain of each paper, from its problem context: 12 domains (for example routing and logistics, scheduling, classification and detection) plus “Other applied” and “Pure math / theory”.</td></tr>
+      </tbody>
+    </table></div>
+    <p class="tnote">First run on GECCO 2020–2026: 767 papers classified as 390 Applied and 377 Theory. A manual audit of the 2020 residual class found about 157 of its 298 datasets were genuine real-world data and about 75 were synthetic test functions the Tier 2 rules missed (spelling variants such as “Griewangk”, suites such as YABBOB), so the Tier 3 rules were extended.</p>
+    <div class="facts">
+      <div class="fact"><b>2,822</b><span>distinct dataset labels in the consolidated corpus of 1,494 papers</span></div>
+      <div class="fact"><b>229</b><span>labels reused by two or more papers (Tier 1)</span></div>
+      <div class="fact"><b>2,240</b><span>labels in the residual class, refined by Tier 3</span></div>
+      <div class="fact"><b>892 / 602</b><span>Applied and Pure Math / Theory papers (Tier 4)</span></div>
+    </div>
+    <div class="grid2">
+      <figure class="chart" id="ch-reused"></figure>
+      <figure class="chart" id="ch-tier2"></figure>
+      <figure class="chart" id="ch-domains"></figure>
+      <figure class="chart" id="ch-applied"></figure>
+    </div>
+    <p class="tnote">Within the 2,085 single-use residual labels, Tier 3 assigns 79 to pure-math test functions, 30 to bit-string problems, 28 to instance libraries, 19 to program synthesis, 17 to RL/game environments and 4 to opaque labels; the remaining 1,908 fall to the default “genuine real-world” class, which still contains some test functions.</p>
+  </div>
+
+  <div class="sub">
+    <h3>Completeness of the dataset fields</h3>
+    <p>No dataset field is empty: each holds a value or an explicit placeholder. Most Pure Math records rightly say no dataset is needed, because the formula and dimension define the instance.</p>
+    <div class="facts">
+      <div class="fact"><b>46%</b><span>of records name a real dataset (5,246 of 11,342)</span></div>
+      <div class="fact"><b>90%</b><span>of Applied records name one (4,196 of 4,667)</span></div>
+      <div class="fact"><b>22%</b><span>give a source platform (2,545 records): TSPLIB 234, UCI 397 under two spellings, OpenML 121</span></div>
+      <div class="fact"><b>330</b><span>Applied records carry the Pure Math placeholder, an extraction labelling error</span></div>
+    </div>
+  </div>
+</section>
+
+<section id="corpus">
+  <span class="eyebrow">Corpus</span>
+  <h2>Five venues consolidated into one cleaned corpus</h2>
+  <p>The combined input held 11,703 records. Its fields were complete, but it had five classes of defect, which a deterministic, re-runnable cleaning script fixes while logging every change.</p>
+  <div class="grid2">
+    <div>
+      <p class="tcap">Defects found</p>
+      <ul class="lead-list">
+        <li>Paper IDs restarted every year and collided across venues (5,701 repeated IDs).</li>
+        <li>Missing values were written two ways, “Unknown” and “Not Reported”.</li>
+        <li>114 PReMI records used an undefined category, “Benchmark”.</li>
+        <li>Some papers appeared more than once: GECCO 2020 papers copied into the 2026 folder, cross-venue copies, and PReMI papers stored up to six times under different years.</li>
+        <li>The GECCO 2024 block came from an export made before twelve papers had been extracted.</li>
+      </ul>
+    </div>
+    <div>
+      <p class="tcap">Cleaning procedure</p>
+      <ol class="lead-list">
+        <li><b>Complete GECCO 2024</b> from the stored JSON extractions with the pipeline's own flattener (88 records).</li>
+        <li><b>Remove duplicate papers</b> by normalised title: GECCO 2020/2026 copies keep the copy with more records and are relabelled 2020; cross-venue copies go to their true venue; otherwise the copy with most records is kept. Identical records within a paper are dropped.</li>
+        <li><b>Unify missing markers:</b> “Unknown” and “Not specified” become “Not Reported”.</li>
+        <li><b>Fix categories:</b> “Benchmark” becomes “Pure Math”.</li>
+        <li><b>Normalise numbers</b>, for example 100.0 to 100.</li>
+        <li><b>Issue unique IDs</b> that encode year, venue, paper and record number (for example <code>P2024_GECCO_012_Ext_03</code>), keeping the original ID.</li>
+      </ol>
+    </div>
+  </div>
+  <div class="grid2" style="margin-top:1rem">
+    <div>
+      <p class="tcap">Logged cleaning actions</p>
+      <div class="tw"><table style="min-width:0">
+        <thead><tr><th>Action</th><th class="num">Count</th></tr></thead>
+        <tbody>
+          <tr><td style="white-space:normal">Records dropped as duplicate papers</td><td class="num">433</td></tr>
+          <tr><td style="white-space:normal">Records relabelled from 2026 to 2020</td><td class="num">113</td></tr>
+          <tr><td style="white-space:normal">Records added from stored GECCO 2024 extractions</td><td class="num">88</td></tr>
+          <tr><td style="white-space:normal">Papers renumbered to avoid ID collisions</td><td class="num">71</td></tr>
+          <tr><td style="white-space:normal">Identical records dropped within a paper</td><td class="num">16</td></tr>
+          <tr><td style="white-space:normal">Modality / separability “Unknown” → “Not Reported”</td><td class="num">3,995 / 4,581</td></tr>
+        </tbody>
+      </table></div>
+    </div>
+    <div>
+      <p class="tcap">Cleaned corpus by venue</p>
+      <div class="tw"><table style="min-width:440px" id="venue-table">
+        <thead><tr><th>Venue</th><th class="num">Raw records</th><th class="num">Clean records</th><th class="num">Papers</th><th>Years</th></tr></thead>
+        <tbody></tbody>
+      </table></div>
+      <p class="tnote">PPSN was extracted from five whole proceedings volumes, so its records are attributed to the volume, not to individual papers. Clean records and years are recomputed from <span class="mono">master_dataset_clean.csv</span>; raw records and papers are from the progress report.</p>
+    </div>
+  </div>
+  <figure class="chart" id="ch-years" style="margin-top:1rem"></figure>
+  <p class="tnote" id="corpus-note"></p>
+</section>
+
+<section id="kb">
+  <span class="eyebrow">Knowledge base</span>
+  <h2>From records to benchmark entities</h2>
+  <p>Every record gets a short search text and an embedding; benchmark names are resolved into entities; each entity stores its aliases, evidence, disagreements and ranked algorithms.</p>
+  <div class="cardlist">
+    <div class="card"><h3>Search text and embeddings</h3><ul>
+      <li>Applied records use the problem context with the paper title; Pure Math records use the benchmark name with its target landscape and reported characteristics.</li>
+      <li>Repeated fragments are removed and very short texts padded with further fields. On the CEC records shared with the first build, 82.2% of texts are identical.</li>
+      <li>Texts are encoded with all-mpnet-base-v2 into L2-normalised 768-dimensional vectors, with a SHA-256 hash per text so changes can be detected. Embedding the 11,342 records took 45 s on an Apple-silicon laptop.</li>
+    </ul></div>
+    <div class="card"><h3>Entity resolution</h3><ul>
+      <li>A normalised name key: lower-cased, spelling variants unified (“salesperson” to “salesman”, “travelling” to “traveling”), generic words such as function, benchmark, suite and test dropped.</li>
+      <li>Names mentioning a CEC competition year map to a suite key (“cec_2017”), and “Long Name (ACR)” merges with “Long Name” when that key exists in the same category.</li>
+      <li>Agrees with the first build's grouping on 99.4% of names. In kb-v2 it turns 3,374 distinct names into 3,100 groups; 145 records merged through acronyms and 809 records fall into 17 CEC suite entities.</li>
+    </ul></div>
+    <div class="card"><h3>Entity records</h3><ul>
+      <li>The medoid record, the member most similar to all others, supplies the base description:<br><span class="formula">m<sub>b</sub> = argmax<sub>i∈b</sub> Σ<sub>j∈b, j≠i</sub> v<sub>i</sub><sup>⊤</sup>v<sub>j</sub></span></li>
+      <li>Descriptions start with the canonical name, Pure Math descriptions gain every member's landscape traits, and eleven artefact entities (an algorithm name in the benchmark field) are removed.</li>
+      <li>Confidence tiers: high for 5 or more supporting papers, medium for 2–4, low for 1. Disagreements on modality, separability, landscape or dimensionality are stored, not voted away; DTLZ1, DTLZ2, … are linked as variant families.</li>
+    </ul></div>
+  </div>
+  <div class="grid2" style="margin-top:1.4rem">
+    <div>
+      <p class="tcap">First and current knowledge base</p>
+      <div class="tw"><table style="min-width:0">
+        <thead><tr><th></th><th class="num">kb-v1</th><th class="num">kb-v2</th></tr></thead>
+        <tbody>
+          <tr><td style="white-space:normal">Records</td><td class="num">4,256</td><td class="num">11,342</td></tr>
+          <tr><td style="white-space:normal">Source papers</td><td class="num">459</td><td class="num">1,494</td></tr>
+          <tr><td style="white-space:normal">Benchmark entities</td><td class="num">1,035</td><td class="num">3,089</td></tr>
+          <tr><td style="white-space:normal">High / medium / low confidence</td><td class="num">17 / 33 / 985</td><td class="num">36 / 225 / 2,828</td></tr>
+          <tr><td style="white-space:normal">Entities with flagged disagreements</td><td class="num">113</td><td class="num">297</td></tr>
+          <tr><td style="white-space:normal">Strategy rows (entity, metric, algorithm)</td><td class="num">3,700</td><td class="num">10,069</td></tr>
+        </tbody>
+      </table></div>
+      <p class="tnote">From the progress report. kb-v1 counts papers by paper ID (459); the stat card above counts distinct PDFs (456). For every entity the algorithms are aggregated by metric family with one vote per paper, then ranked by whether the optimum was reported found, the share of reports that found it, and the number of reporting papers.</p>
+    </div>
+    <figure class="chart" id="ch-evidence"></figure>
+  </div>
+  <figure class="chart" id="ch-top" style="margin-top:1rem"></figure>
+  <p class="tnote">Most kb-v2 entities (91.6%) rest on one paper, while a core of classic problems carries most of the evidence. Sphere and Rastrigin appear in all five venues, and 117 entities appear in at least two.</p>
+</section>
+
 <section id="flow">
   <span class="eyebrow">Query flow</span>
   <h2>How a query is answered</h2>
-  <p>What happens between typing a description and seeing recommended strategies. Values are the defaults in the repository's retrieval and output scripts.</p>
+  <p>What happens between typing a description and seeing recommended strategies. Values are the defaults in the repository's retrieval and output scripts and match the search figure in the progress report.</p>
   <div class="flow">
     <div class="stage">
       <div class="stage-h"><span class="dot">A</span><div><small>Stage A</small><h3>Understand the query</h3></div></div>
       <ol class="fsteps">
         <li class="fstep fbox"><b>User text</b><span>A plain-English description of the optimisation problem.</span></li>
         <li class="fstep fpair">
-          <div class="fbox"><b>Keyword search</b><span><code>BM25</code> · finds entities that share the query's words. Returns 20 candidates.</span></div>
-          <div class="fbox"><b>Meaning search</b><span><code>all-mpnet-base-v2</code> embeddings · finds entities with a similar meaning. Returns 20 candidates.</span></div>
+          <div class="fbox"><b>Keyword search</b><span><code>BM25</code> (k<sub>1</sub> = 1.5, b = 0.75) · finds entities that share the query's words; strong on exact names such as “ZDT1”. Returns 20 candidates.</span></div>
+          <div class="fbox"><b>Meaning search</b><span><code>all-mpnet-base-v2</code> embeddings · finds entities with a similar meaning, so “many local minima” still reaches Rastrigin. Returns 20 candidates.</span></div>
         </li>
       </ol>
     </div>
@@ -329,10 +656,10 @@ footer{border-top:1px solid var(--line);padding-block:2rem 3rem;font-size:.85rem
     <div class="stage">
       <div class="stage-h"><span class="dot">B</span><div><small>Stage B</small><h3>Match to a problem</h3></div></div>
       <ol class="fsteps">
-        <li class="fstep fbox"><b>Reciprocal rank fusion</b><span>Merges the keyword, meaning and paper-count rankings into one list.</span></li>
+        <li class="fstep fbox"><b>Reciprocal rank fusion</b><span>Merges the keyword, meaning and paper-count rankings into one list (k = 60). Only positions are combined, because the rankers' scores have different scales.</span></li>
         <li class="fstep fbox"><b>Shortlist of 10</b><span>Only the ten best merged candidates go forward.</span></li>
-        <li class="fstep fbox"><b>Cross-encoder re-score</b><span><code>cross-encoder/ms-marco-MiniLM-L-6-v2</code> reads the query and each candidate together, then adds a small bonus for entities backed by more papers: score + 0.5 × log(1 + papers).</span></li>
-        <li class="fstep fbox"><b>Margin check</b><span>The top candidate must beat the second by at least 1.0.</span></li>
+        <li class="fstep fbox"><b>Cross-encoder re-score</b><span><code>cross-encoder/ms-marco-MiniLM-L-6-v2</code> reads the query and each candidate together, then adds a small bonus for entities backed by more papers: score + 0.5 × ln(1 + papers). One paper adds 0.35 and 25 papers add 1.63: enough to settle close calls, not enough to overturn a clearly better match.</span></li>
+        <li class="fstep fbox"><b>Margin check</b><span>The top candidate must beat the second by at least 1.0. Cross-encoder scores have no fixed scale, so the gap is tested, not the score.</span></li>
         <li class="fstep fpair">
           <div class="fbox pass"><span class="lbl">pass</span><b>Mapped problem entity</b><span>The match goes on to Stage C.</span></div>
           <div class="fbox fail"><span class="lbl">fail</span><b>Not mapped: logged for review</b><span>No answer is forced; the query is saved for the team.</span></div>
@@ -346,16 +673,70 @@ footer{border-top:1px solid var(--line);padding-block:2rem 3rem;font-size:.85rem
         <li class="fstep fbox"><b>Look up the strategy table</b><span>Reads the matched entity's rows from the ranked strategy layer.</span></li>
         <li class="fstep fbox"><b>Group by metric family</b><span>Results reported under different metrics are never compared.</span></li>
         <li class="fstep fbox"><b>Rank within each family</b><span>First by whether the optimum status was reported, then by the share of reports where the optimum was found, then by papers reporting.</span></li>
-        <li class="fstep fbox out"><b>Output</b><span>The entity, match confidence (the margin), evidence strength (papers and description confidence), and up to 3 metric families × 5 strategies each.</span></li>
+        <li class="fstep fbox out"><b>Output</b><span>The entity, match confidence (the margin), evidence strength (papers and description confidence), the landscape properties papers disagree on, and up to 3 metric families × 5 strategies each. Keeping the two confidences apart stops “unsure which problem you mean” from looking like “well understood but rarely studied”.</span></li>
       </ol>
     </div>
   </div>
   <div class="planned">
-    <div class="planned-h"><span class="pill next">Planned</span>Not built yet. These steps are designed but not part of the system above.</div>
+    <div class="planned-h"><span class="pill next">Planned</span>Not built yet. These are the next-phase items in the progress report, not part of the system above.</div>
     <div class="planned-grid">
-      <div class="fbox"><b>Landscape (ELA) matching</b><span>Measure the shape of the user's own objective function and match it to the reference library.</span></div>
-      <div class="fbox"><b>Run the recommendations</b><span>Run the recommended strategies with MEALPy and compare them with default settings.</span></div>
-      <div class="fbox"><b>Web interface</b><span>A form for entering a problem instead of the command-line demo.</span></div>
+      <div class="fbox"><b>Benchmark and dataset answers for EvoLabs</b><span>Return the right benchmark and its standard datasets to EvoLabs, which runs DE, GA, PSO and other algorithms with the user's chosen parameters.</span></div>
+      <div class="fbox"><b>Structured problem input</b><span>Accept a function and its parameters as well as a sentence; filter by variable type, objectives and constraints; compute ELA features from samples of the user's function.</span></div>
+      <div class="fbox"><b>Validation at scale</b><span>Grow the test set to about 100 labelled descriptions and calibrate the margin τ and the evidence weight α.</span></div>
+    </div>
+  </div>
+</section>
+
+<section id="eval">
+  <span class="eyebrow">Evaluation</span>
+  <h2>How well the search works</h2>
+  <p>The search was evaluated on 20 held-out plain-language descriptions: 8 easy ones describing a well-known benchmark, 6 hard ones (4 scorable, 2 deliberately ambiguous and not scored) and 6 out-of-scope ones, such as recipes, travel plans and tax returns, that should be refused. A query counts as correct when the system returns the expected entity or, for out-of-scope queries, when it refuses. This evaluation ran on the first knowledge base, kb-v1; for kb-v2 the test set has been re-mapped to the new entity IDs, but the full evaluation has not been run yet.</p>
+  <div class="grid2">
+    <div>
+      <p class="tcap">Evaluation on the first knowledge base (20 queries)</p>
+      <div class="tw"><table style="min-width:0">
+        <thead><tr><th>Query set</th><th class="num">Queries</th><th class="num">Correct</th><th>Note</th></tr></thead>
+        <tbody>
+          <tr><td>Easy</td><td class="num">8</td><td class="num">4</td><td>1 confident error, 3 refusals</td></tr>
+          <tr><td>Hard (scorable)</td><td class="num">4</td><td class="num">1</td><td>1 confident error, 2 refusals</td></tr>
+          <tr><td>Hard (ambiguous)</td><td class="num">2</td><td class="num">—</td><td>not scored</td></tr>
+          <tr><td>Out-of-scope</td><td class="num">6</td><td class="num">6</td><td>all refused</td></tr>
+          <tr><td>In-scope answers given</td><td class="num">7</td><td class="num">5</td><td>precision 71%</td></tr>
+        </tbody>
+      </table></div>
+      <p class="tnote">Of the 12 scorable in-scope queries the system answered 7 and was right on 5, so when it answered it was right 71% of the time; it refused the other 5. The 61% in Progress counts the 6 refused out-of-scope queries as correct too (11 of 18 scored queries).</p>
+    </div>
+    <div>
+      <p class="tcap">What the run showed</p>
+      <ul class="lead-list">
+        <li>All out-of-scope queries were refused, with a largest margin of 0.22, well below τ = 1.0.</li>
+        <li>Mean margins were 3.47 for correct answers and 0.89 for incorrect ones.</li>
+        <li>A OneMax description was answered with the artefact entity “Multifactorial Evolutionary Algorithm (MFEA)” at margin 3.09. This led to the artefact filter, and that entity no longer exists in kb-v2.</li>
+        <li>A LeadingOnes description returned the related “Generalized Leading-Ones” entity.</li>
+        <li>Most refusals were on multi-objective benchmarks (ZDT1, ZDT3, ZDT4, DTLZ1), where several single-paper entities describe similar Pareto fronts.</li>
+      </ul>
+    </div>
+  </div>
+  <div class="sub">
+    <h3>Behaviour of the current knowledge base</h3>
+    <p>Descriptions run against kb-v2 with the real models. Well-described problems are answered with large margins; the multimodal description now reaches Rastrigin backed by 25 papers instead of 11. Short descriptions naming common problems are refused.</p>
+    <figure class="chart" id="ch-margins"></figure>
+  </div>
+  <div class="grid2 sub">
+    <div>
+      <h3>Failure analysis</h3>
+      <p>The refused TSP description has the highest top score of all, so it is not a weak match. TSP is represented by two entities with the same name key, one Pure Math (7 papers) and one Applied (5 papers), because names are grouped within each category, plus about 44 further TSP-related entities at instance level. Two near-identical candidates always produce a small margin, so the refusal rule fires on the problems the system knows best. Similarly, 41 entities contain “Sphere” in their name, including “Sphere (f1)” and “BBOB f1 (Sphere function)” next to the 29-paper “Sphere function”. The refusal rule therefore depends on complete entity resolution.</p>
+    </div>
+    <div>
+      <h3>Limitations</h3>
+      <ul class="lead-list">
+        <li><b>Extraction accuracy is not yet measured:</b> the schema rejects malformed values but cannot catch a wrong value of the right type.</li>
+        <li><b>Imputed fields:</b> unreported numeric parameters were filled with documented defaults and must not be read as evidence; half the records do not report modality.</li>
+        <li><b>Coverage:</b> PPSN was extracted from whole volumes, EvoStar is not yet included, 24 GECCO 2026 papers are not yet extracted, and some PReMI records describe non-evolutionary methods.</li>
+        <li><b>Strategy ranking:</b> most records report no outcome, so 1,320 of the 1,875 entity–metric groups with several algorithms fall back to alphabetical order.</li>
+        <li><b>Rule-based classification:</b> the Tier 2–4 rules miss spelling variants, and the default Tier 3 class still mixes real-world datasets with test functions.</li>
+        <li><b>Evaluation scale:</b> twenty queries expose failure modes but are too few to tune α and τ.</li>
+      </ul>
     </div>
   </div>
 </section>
@@ -363,7 +744,7 @@ footer{border-top:1px solid var(--line);padding-block:2rem 3rem;font-size:.85rem
 <section id="demo">
   <span class="eyebrow">Demonstration</span>
   <h2>What the system returns</h2>
-  <p>Three problems from the knowledge base. The matched entity, paper counts and strategies are read from the project's data files. The queries are illustrative inputs for each entity; live matching runs on the team's machine with the scripts in the repository.</p>
+  <p>Three problems from the knowledge base. The matched entity, paper counts and strategies are read from the published kb-v1 files; in kb-v2 Rastrigin has 25 supporting papers and the CEC 2017 suite 38. The queries are illustrative inputs for each entity; live matching runs on the team's machine with the scripts in the repository.</p>
   <div class="tabs" role="tablist" aria-label="Example problems" id="tabs"></div>
   <div class="demo" id="demo-panel" role="tabpanel" aria-live="polite"></div>
 </section>
@@ -374,24 +755,25 @@ footer{border-top:1px solid var(--line);padding-block:2rem 3rem;font-size:.85rem
   <div class="cols3">
     <div class="col"><h3><span class="pill done">Done</span> Core system</h3>
       <ul>
-        <li><strong>Extraction and cleaning</strong>: <span data-k="clean_records">–</span> records in the cleaned table</li>
-        <li><strong>Matching texts and embeddings</strong> for <span data-k="embedded">–</span> records</li>
-        <li><strong>Entity grouping</strong>: <span data-k="entities">–</span> entities with descriptions</li>
-        <li><strong>Strategy ranking</strong> per metric family: <span data-k="strategies">–</span> entries</li>
-        <li><strong>Hybrid retrieval</strong> with confidence gate</li>
-        <li><strong>Structured output</strong> and an evaluation suite</li>
+        <li><strong>Schema-constrained extraction</strong> of whole papers with Gemini</li>
+        <li><strong>Cleaned corpus</strong>: <span data-k="clean_records">–</span> records from 1,494 papers in five venues</li>
+        <li><strong>Four-tier dataset and domain classification</strong></li>
+        <li><strong>kb-v1</strong>: <span data-k="embedded">–</span> embedded records, <span data-k="entities">–</span> entities, <span data-k="strategies">–</span> strategy entries</li>
+        <li><strong>kb-v2</strong>: 3,089 entities and 10,069 strategy rows, per the progress report</li>
+        <li><strong>Hybrid search</strong> with margin-based refusal, structured output and a 20-query evaluation</li>
       </ul></div>
-    <div class="col"><h3><span class="pill now">In progress</span> More data</h3>
+    <div class="col"><h3><span class="pill now">In progress</span> Current phase</h3>
       <ul>
-        <li><strong>Rebuild on the new cleaned table</strong>: <span data-k="clean_new">–</span> records from <span data-k="clean_new_papers">–</span> papers, including the <span data-k="premi_clean">–</span> PReMI records, are cleaned but not yet in the master table, so matching text, embeddings, grouping and ranking are still to be run on them</li>
+        <li><strong>Full evaluation on kb-v2</strong>: the test set is re-mapped to the new entity IDs; the run is still to come</li>
+        <li><strong>Coverage</strong>: 24 GECCO 2026 papers still to extract; EvoStar not yet included</li>
         <li><strong>Reusable ingestion step</strong> so teammates can add papers from PDFs or CSVs</li>
-        <li><strong>Re-evaluation</strong> after the rebuild</li>
       </ul></div>
-    <div class="col"><h3><span class="pill next">Planned</span> Next</h3>
+    <div class="col"><h3><span class="pill next">Planned</span> Next phase</h3>
       <ul>
-        <li><strong>Landscape matching</strong> from the user's objective function (ELA) with a reference library</li>
-        <li><strong>Solver stage</strong>: run recommended strategies with MEALPy against defaults</li>
-        <li><strong>Web interface</strong> for entering a problem</li>
+        <li><strong>EvoLabs integration</strong>: return the right benchmark and its standard datasets, with a dataset layer, a benchmark card and a table linking benchmarks to instance libraries such as the OR-Library and TSPLIB, to close the 78% gap in dataset sources</li>
+        <li><strong>Structured problem input</strong>: a function and its parameters as well as a sentence, with ELA features for continuous functions</li>
+        <li><strong>Entity resolution</strong>: group name keys across categories, treat a runner-up from the same family as agreement, link instance-level entities to one parent</li>
+        <li><strong>Validation</strong>: a 40-record grouping gold standard with two annotators, a spot-check of about 30 records against their PDFs, and about 100 test descriptions to calibrate τ and α</li>
       </ul></div>
   </div>
   <div class="results">
@@ -418,8 +800,27 @@ footer{border-top:1px solid var(--line);padding-block:2rem 3rem;font-size:.85rem
       <tr><td>7 · Retrieval</td><td>BM25 and dense search, rank fusion, cross-encoder, confidence gate</td><td>retrieval scripts</td></tr>
       <tr><td>8 · Final output</td><td>Assembles entity, confidence, evidence and strategies; logs unmapped queries</td><td><code>part8_final_output.py</code></td></tr>
       <tr><td>9 · Evaluation</td><td>Runs easy, hard and out-of-scope queries and reports accuracy</td><td><code>part9_*</code> scripts</td></tr>
+      <tr><td>Classification</td><td>Four-tier rule-based classification of dataset labels and application domains</td><td>per-year charts and paper reports</td></tr>
+      <tr><td>Consolidation</td><td>Merges five venues, removes duplicate papers, unifies placeholders and issues unique IDs (kb-v2 input)</td><td><code>master_dataset_clean.csv</code></td></tr>
     </tbody>
   </table></div>
+  <div class="sub">
+    <h3>Key references</h3>
+    <ol class="refs">
+      <li><i>J. R. Rice.</i> The Algorithm Selection Problem. Advances in Computers 15, 1976.</li>
+      <li><i>O. Mersmann, B. Bischl, H. Trautmann, M. Preuss, C. Weihs, G. Rudolph.</i> Exploratory Landscape Analysis. GECCO 2011.</li>
+      <li><i>P. Kerschke, H. H. Hoos, F. Neumann, H. Trautmann.</i> Automated Algorithm Selection: Survey and Perspectives. Evolutionary Computation 27(1), 2019.</li>
+      <li><i>N. Hansen, A. Auger, R. Ros, O. Mersmann, T. Tušar, D. Brockhoff.</i> COCO: A Platform for Comparing Continuous Optimizers in a Black-Box Setting. Optimization Methods and Software 36(1), 2021.</li>
+      <li><i>C. Doerr, H. Wang, F. Ye, S. van Rijn, T. Bäck.</i> IOHprofiler: A Benchmarking and Profiling Tool for Iterative Optimization Heuristics. arXiv:1810.05281, 2018.</li>
+      <li><i>N. H. Awad, M. Z. Ali, J. J. Liang, B. Y. Qu, P. N. Suganthan.</i> Problem Definitions and Evaluation Criteria for the CEC 2017 Special Session and Competition on Single Objective Real-Parameter Numerical Optimization. Technical report, 2016.</li>
+      <li><i>J. Dagdelen et al.</i> Structured Information Extraction from Scientific Text with Large Language Models. Nature Communications 15, 2024.</li>
+      <li><i>S. Robertson, H. Zaragoza.</i> The Probabilistic Relevance Framework: BM25 and Beyond. Foundations and Trends in Information Retrieval 3(4), 2009.</li>
+      <li><i>N. Reimers, I. Gurevych.</i> Sentence-BERT: Sentence Embeddings Using Siamese BERT-Networks. EMNLP-IJCNLP 2019.</li>
+      <li><i>G. V. Cormack, C. L. A. Clarke, S. Büttcher.</i> Reciprocal Rank Fusion Outperforms Condorcet and Individual Rank Learning Methods. SIGIR 2009.</li>
+      <li><i>R. Nogueira, K. Cho.</i> Passage Re-ranking with BERT. arXiv:1901.04085, 2019.</li>
+      <li><i>G. Reinelt.</i> TSPLIB: A Traveling Salesman Problem Library. ORSA Journal on Computing 3(4), 1991.</li>
+    </ol>
+  </div>
   <p class="src" style="margin-top:1rem">Design notes written for the project: knowledge-base schema, implementation plan, landscape-feature validation, and the landscape-matching plan. Code and data files are in the <a href="https://github.com/Viritha-D/project_fyp" target="_blank" rel="noopener">GitHub repository</a>.</p>
 </section>
 
@@ -428,10 +829,12 @@ footer{border-top:1px solid var(--line);padding-block:2rem 3rem;font-size:.85rem
   <h2>Team 97</h2>
   <div class="team" id="team-grid"></div>
   <p class="guide"><b>Project guide:</b> Dr. Ritwik M., Amrita Vishwa Vidyapeetham</p>
+  <p class="src">Course 23CSE498 · Dept. of Computer Science and Engineering, Amrita School of Engineering, Coimbatore, Amrita Vishwa Vidyapeetham</p>
 </section>
 
 <footer>
   <div>Evolutionary Algorithm Benchmark Selection System · Team 97 · Amrita Vishwa Vidyapeetham · Updated October 2026</div>
+  <div style="margin-top:.4rem">Content from the team's progress report (October 2026) and the project repository.</div>
   <div style="margin-top:.4rem"><a href="https://github.com/Viritha-D/project_fyp" target="_blank" rel="noopener">github.com/Viritha-D/project_fyp</a></div>
 </footer>
 
@@ -700,6 +1103,150 @@ footer{border-top:1px solid var(--line);padding-block:2rem 3rem;font-size:.85rem
    11,
    18
   ]
+ },
+ "corpus": {
+  "file": "master_dataset_clean.csv",
+  "committed": "2026-10-25",
+  "records": 11342,
+  "by_category": {
+   "Pure Math": 6675,
+   "Applied": 4667
+  },
+  "venues": [
+   "GECCO",
+   "CEC",
+   "PReMI",
+   "FOGA",
+   "PPSN"
+  ],
+  "by_venue": {
+   "GECCO": {
+    "records": 6450,
+    "years": "2020–2026"
+   },
+   "CEC": {
+    "records": 3675,
+    "years": "2019–2024"
+   },
+   "PReMI": {
+    "records": 658,
+    "years": "2000–2024"
+   },
+   "FOGA": {
+    "records": 467,
+    "years": "2015–2023"
+   },
+   "PPSN": {
+    "records": 92,
+    "years": "2016–2024"
+   }
+  },
+  "by_year": [
+   {
+    "year": "≤2014",
+    "GECCO": 0,
+    "CEC": 0,
+    "PReMI": 68,
+    "FOGA": 0,
+    "PPSN": 0
+   },
+   {
+    "year": "2015",
+    "GECCO": 0,
+    "CEC": 0,
+    "PReMI": 33,
+    "FOGA": 170,
+    "PPSN": 0
+   },
+   {
+    "year": "2016",
+    "GECCO": 0,
+    "CEC": 0,
+    "PReMI": 33,
+    "FOGA": 0,
+    "PPSN": 22
+   },
+   {
+    "year": "2017",
+    "GECCO": 0,
+    "CEC": 0,
+    "PReMI": 118,
+    "FOGA": 76,
+    "PPSN": 0
+   },
+   {
+    "year": "2018",
+    "GECCO": 0,
+    "CEC": 0,
+    "PReMI": 9,
+    "FOGA": 0,
+    "PPSN": 15
+   },
+   {
+    "year": "2019",
+    "GECCO": 0,
+    "CEC": 265,
+    "PReMI": 25,
+    "FOGA": 73,
+    "PPSN": 0
+   },
+   {
+    "year": "2020",
+    "GECCO": 1205,
+    "CEC": 1213,
+    "PReMI": 16,
+    "FOGA": 0,
+    "PPSN": 14
+   },
+   {
+    "year": "2021",
+    "GECCO": 614,
+    "CEC": 1429,
+    "PReMI": 53,
+    "FOGA": 51,
+    "PPSN": 0
+   },
+   {
+    "year": "2022",
+    "GECCO": 588,
+    "CEC": 204,
+    "PReMI": 25,
+    "FOGA": 0,
+    "PPSN": 28
+   },
+   {
+    "year": "2023",
+    "GECCO": 697,
+    "CEC": 389,
+    "PReMI": 267,
+    "FOGA": 97,
+    "PPSN": 0
+   },
+   {
+    "year": "2024",
+    "GECCO": 914,
+    "CEC": 175,
+    "PReMI": 11,
+    "FOGA": 0,
+    "PPSN": 13
+   },
+   {
+    "year": "2025",
+    "GECCO": 1470,
+    "CEC": 0,
+    "PReMI": 0,
+    "FOGA": 0,
+    "PPSN": 0
+   },
+   {
+    "year": "2026",
+    "GECCO": 962,
+    "CEC": 0,
+    "PReMI": 0,
+    "FOGA": 0,
+    "PPSN": 0
+   }
+  ]
  }
 }/* SITE_DATA_END */;
 
@@ -775,20 +1322,13 @@ footer{border-top:1px solid var(--line);padding-block:2rem 3rem;font-size:.85rem
     function chips(list,extra){var u=el('ul','chips');list.forEach(function(x){u.appendChild(el('li',null,x))});if(extra)u.appendChild(el('li',null,extra));return u}
     function pct(v){return v==null?'not reported':(Math.round(v*10)/10)+'%'}
     var TYPE={single_function:'single function',named_subset:'named subset',suite:'suite'};
-    var premi=(D.sources||[]).filter(function(s){return s.venue==='PReMI'})[0];
     var K={papers:D.papers.value,records:D.records.value,entities:D.entities.value,strategies:D.strategies.value,
-      embedded:D.stage.embedded,clean_records:D.stage.clean_records,clean_new:D.stage.clean_records_not_in_master,
-      clean_new_papers:D.stage.clean_papers_not_in_master,premi_clean:premi&&premi.not_in_master?premi.not_in_master.records:null};
+      embedded:D.stage.embedded,clean_records:D.stage.clean_records};
     Array.prototype.forEach.call(document.querySelectorAll('[data-k]'),function(e){e.textContent=fmt(K[e.getAttribute('data-k')])});
 
     var st=D.stage, line=document.getElementById('stage-line'); line.textContent='';
-    [ 'As of '+day(D.as_of)+' (repository commit '+String(D.repo.commit).split(' ')[0]+'): entities and strategies built from '+
-      fmt(st.built_from)+' of '+fmt(st.master_records)+' records in the master table.' ].forEach(function(t){line.appendChild(document.createTextNode(t))});
-    if(st.clean_records_not_in_master){
-      line.appendChild(document.createTextNode(' A newer cleaned table, '));line.appendChild(mono(st.clean_file));
-      line.appendChild(document.createTextNode(' ('+day(st.clean_committed)+'), adds '+fmt(st.clean_records_not_in_master)+' records from '+
-        fmt(st.clean_papers_not_in_master)+' papers that are not yet embedded, grouped or ranked.'));
-    }
+    line.appendChild(document.createTextNode('As of '+day(D.as_of)+' (repository commit '+String(D.repo.commit).split(' ')[0]+'): the published kb-v1 entities and strategies are built from '+
+      fmt(st.built_from)+' of '+fmt(st.master_records)+' records in the master table.'));
 
     var PANELS={
       papers:function(p){
@@ -863,6 +1403,140 @@ footer{border-top:1px solid var(--line);padding-block:2rem 3rem;font-size:.85rem
     document.addEventListener('keydown',function(e){
       if(e.key==='Escape'&&openKey){var b=document.getElementById('stat-btn-'+openKey);setOpen(null);if(b)b.focus()}
     });
+  }catch(e){}
+
+  /* ---- figures and tables from the progress report (October 2026); the year-by-venue chart is recomputed from SITE_DATA ---- */
+  var REPORT={
+    unreported:[['Optimum found',74.9],['Separability',65.6],['Modality',50.7]],
+    algos:[['NSGA-II',231],['DE',134],['MOEA/D',130],['NSGA-III',116]],
+    reused:[['Custom Simulated Data',119],['MNIST',25],['OneMax',24],['Rastrigin',20],['Sphere',19],['DTLZ1',17],['DTLZ2',17],['Rosenbrock',15],['LeadingOnes',15],['CIFAR-10',15],['ZDT3',13],['TSPLIB',12],['ZDT1',11]],
+    tier2:[['CEC benchmarks',202],['Classic functions',104],['Custom / simulated',65],['BBOB / COCO',64],['DTLZ suite',49],['Image datasets',25],['TSP / routing',18],['WFG suite',16],['RL environments',14],['ZDT suite',12],['OpenML / UCI',10],['Program synthesis',3]],
+    domains:[['Other applied',371],['Classification & detection',176],['Regression & prediction',72],['Scheduling & planning',55],['Routing & logistics',51],['Image & vision',48],['Design & engineering',40],['Games & RL',26],['Navigation',19],['ML tuning & feature selection',16],['Software testing',16],['Combinatorial optimisation',2]],
+    applied:[['PReMI',260,292],['CEC',229,378],['GECCO',402,750],['FOGA',1,69]],
+    venues:{GECCO:[6637,'750'],CEC:[3709,'378'],PReMI:[798,'292'],FOGA:[467,'69'],PPSN:[92,'5†']},
+    totals:{raw:11703,papers:'1,494'},
+    evidence:[['1',2828],['2',164],['3–4',61],['5–9',17],['10–19',15],['20+',4]],
+    top:[['CEC 2017 suite',38],['Sphere',29],['OneMax',26],['Rastrigin',25],['DTLZ1',19],['DTLZ2',19],['Rosenbrock',18],['LeadingOnes',16]],
+    margins:[['“rugged multimodal function with many local minima”',3.17,5.91,'Rastrigin'],['“battery charge equalisation, switched capacitor”',5.87,10.43,'SPSC balancing'],
+      ['“travelling salesman problem”',10.50,0.97,null],['“give algorithm for travelling salesman problem”',6.19,0.16,null],['“Sphere”',7.85,0.12,null]]
+  };
+  var VENUE_COLOR={GECCO:'var(--v1)',CEC:'var(--v2)',PReMI:'var(--v3)',FOGA:'var(--v4)',PPSN:'var(--v5)'};
+  try{
+    function num(n){return Number(n).toLocaleString('en-US')}
+    function head(fig,t,s){fig.textContent='';fig.appendChild(el('p','ch-t',t));if(s)fig.appendChild(el('p','ch-s',s))}
+    function tableView(fig,heads,rows){
+      var d=el('details','tv');d.appendChild(el('summary',null,'Table view'));
+      var w=el('div','tw'),t=el('table'),tr=el('tr');
+      heads.forEach(function(h){var c=el('th',null,h);c.scope='col';tr.appendChild(c)});
+      var th=el('thead');th.appendChild(tr);t.appendChild(th);var tb=el('tbody');
+      rows.forEach(function(r){var row=el('tr');r.forEach(function(v){row.appendChild(el('td',null,String(v)))});tb.appendChild(row)});
+      t.appendChild(tb);w.appendChild(t);d.appendChild(w);fig.appendChild(d);
+    }
+    function caption(fig,t){if(t)fig.appendChild(el('figcaption',null,t))}
+    /* horizontal bars: one hue, value at the bar tip, optional reference line */
+    function hbars(id,o){
+      var fig=document.getElementById(id);if(!fig)return;head(fig,o.title,o.sub);
+      var max=Math.max.apply(null,o.rows.map(function(r){return r.v}).concat(o.ref?[o.ref.at]:[]));
+      var box=el('div','hb');box.setAttribute('role','img');box.setAttribute('aria-label',o.title+'. Values are listed in the table view.');
+      if(o.ref){var hr=el('div','hb-row hb-head'),ht=el('span','hb-t'),lab=el('span','hb-refl',o.ref.label);
+        lab.style.left='calc((100% - 5.5rem) * '+(o.ref.at/max)+')';hr.appendChild(el('span','hb-l',''));ht.appendChild(lab);hr.appendChild(ht);box.appendChild(hr)}
+      o.rows.forEach(function(r){
+        var row=el('div','hb-row');row.setAttribute('data-tip',r.tip||(r.l+': '+r.text));
+        row.appendChild(el('span','hb-l',r.l));
+        var t=el('span','hb-t'),b=el('span','hb-b'+(r.dim?' dim':''));
+        b.style.width='calc((100% - 5.5rem) * '+(r.v/max)+')';t.appendChild(b);t.appendChild(el('span','hb-v',r.text));
+        if(o.ref){var ln=el('span','hb-ref');ln.style.left='calc((100% - 5.5rem) * '+(o.ref.at/max)+')';t.appendChild(ln)}
+        row.appendChild(t);box.appendChild(row);
+      });
+      fig.appendChild(box);caption(fig,o.caption);if(o.table)tableView(fig,o.table[0],o.table[1]);
+    }
+    /* vertical columns, stacked or single, linear or log scale */
+    function cols(id,o){
+      var fig=document.getElementById(id);if(!fig)return;head(fig,o.title,o.sub);
+      var H=o.height||220, n=o.data.length;
+      function y(v){return o.log?(v<=0?0:Math.log10(v)/Math.log10(o.max)):v/o.max}
+      if(o.cats.length>1){var lg=el('ul','legend');lg.style.marginBottom='.8rem';
+        o.cats.forEach(function(c){var li=el('li');var sw=el('i');sw.style.background=c.color;sw.style.borderColor='transparent';li.appendChild(sw);li.appendChild(document.createTextNode(c.label));lg.appendChild(li)});fig.appendChild(lg)}
+      var cc=el('div','cc');cc.style.setProperty('--h',H+'px');
+      var ya=el('div','cc-y'),pl=el('div','cc-p');pl.setAttribute('role','img');pl.setAttribute('aria-label',o.title+'. Values are listed in the table view.');
+      o.ticks.forEach(function(t){var s=el('span',null,o.tickFmt?o.tickFmt(t):num(t));s.style.bottom=(y(t)*100)+'%';ya.appendChild(s);
+        if(t>(o.log?1:0)){var g=el('div','cc-g');g.style.bottom=(y(t)*100)+'%';pl.appendChild(g)}});
+      var cs=el('div','cc-cols');cs.style.setProperty('--n',n);
+      o.data.forEach(function(d){
+        var col=el('div','cc-col'),tot=0,lines=[d.x];
+        o.cats.forEach(function(c){var v=d[c.key]||0;tot+=v;if(o.cats.length>1)lines.push(c.label+': '+num(v))});
+        lines.push((o.cats.length>1?'Total: ':o.unit)+num(tot));
+        col.setAttribute('data-tip',lines.join('\n'));
+        var segs=[];
+        if(o.log){var s=el('div','cc-seg top');s.style.height=(y(tot)*H)+'px';s.style.background=o.cats[0].color;segs.push(s)}
+        else o.cats.forEach(function(c){var v=d[c.key]||0;if(!v)return;var s=el('div','cc-seg');s.style.height=Math.max(1,v/o.max*H)+'px';s.style.background=c.color;segs.push(s)});
+        if(segs.length)segs[segs.length-1].classList.add('top');
+        segs.forEach(function(s){col.appendChild(s)});
+        if(o.capLabels)col.appendChild(el('span','cc-cap',num(tot)));
+        cs.appendChild(col);
+      });
+      pl.appendChild(cs);cc.appendChild(ya);cc.appendChild(pl);fig.appendChild(cc);
+      var xa=el('div','cc-x');xa.style.setProperty('--n',n);o.data.forEach(function(d){xa.appendChild(el('span',null,d.x))});fig.appendChild(xa);
+      if(o.xTitle)fig.appendChild(el('p','cc-xt',o.xTitle));
+      caption(fig,o.caption);if(o.table)tableView(fig,o.table[0],o.table[1]);
+    }
+    function simple(rows,unit){return rows.map(function(r){return {l:r[0],v:r[1],text:num(r[1])+(unit||'')}})}
+
+    hbars('ch-unreported',{title:'Landscape fields papers leave unstated',sub:'Share of cleaned records where the field is “Not Reported”',
+      rows:REPORT.unreported.map(function(r){return {l:r[0],v:r[1],text:r[1]+'%'}}),
+      table:[['Field','Not reported'],REPORT.unreported.map(function(r){return [r[0],r[1]+'%']})]});
+    hbars('ch-algos',{title:'Most frequent algorithms',sub:'Records in the cleaned corpus, out of 3,343 distinct algorithm names',
+      rows:simple(REPORT.algos),table:[['Algorithm','Records'],REPORT.algos.map(function(r){return [r[0],num(r[1])]})]});
+    hbars('ch-reused',{title:'Most reused datasets (Tier 1)',sub:'Number of papers using each dataset',
+      rows:simple(REPORT.reused),table:[['Dataset','Papers'],REPORT.reused.map(function(r){return [r[0],r[1]]})]});
+    hbars('ch-tier2',{title:'Tier 2 benchmark families',sub:'Distinct dataset labels per family; a further 2,240 labels fall into the residual class',
+      rows:simple(REPORT.tier2),table:[['Family','Distinct labels'],REPORT.tier2.map(function(r){return [r[0],r[1]]})]});
+    hbars('ch-domains',{title:'Application domains (Tier 4)',sub:'892 applied papers; 602 further papers are pure math / theory',
+      rows:simple(REPORT.domains),table:[['Domain','Applied papers'],REPORT.domains.map(function(r){return [r[0],r[1]]})]});
+    hbars('ch-applied',{title:'Share of applied papers by venue',sub:'Applied papers out of each venue’s papers',
+      rows:REPORT.applied.map(function(r){var p=Math.round(r[1]/r[2]*100);return {l:r[0],v:r[1]/r[2]*100,text:p+'%',tip:r[0]+': '+r[1]+' of '+r[2]+' papers applied ('+p+'%)'}}),
+      caption:'FOGA is a theory venue, so almost none of its papers are applied.',
+      table:[['Venue','Applied','Papers','Share'],REPORT.applied.map(function(r){return [r[0],r[1],r[2],Math.round(r[1]/r[2]*100)+'%']})]});
+    hbars('ch-top',{title:'Best-supported benchmark entities in kb-v2',sub:'Distinct supporting papers per entity',
+      rows:simple(REPORT.top),table:[['Entity','Papers'],REPORT.top.map(function(r){return [r[0],r[1]]})]});
+    hbars('ch-margins',{title:'Descriptions run on the current knowledge base',sub:'Margin of the top candidate over the runner-up; answers need a margin of at least τ = 1.0',
+      ref:{at:1,label:'τ = 1.0'},
+      rows:REPORT.margins.map(function(r){return {l:r[0]+(r[3]?' → '+r[3]:' → refused'),v:r[2],dim:!r[3],text:r[2].toFixed(2),
+        tip:r[0]+'\nTop score '+r[1].toFixed(2)+', margin '+r[2].toFixed(2)+'\n'+(r[3]?'Answered: '+r[3]:'Refused')}}),
+      caption:'Teal bars were answered; grey bars were refused because the margin fell below τ. The TSP description is refused despite the highest top score, because two near-identical TSP entities compete.',
+      table:[['Description','Top score','Margin','Outcome'],REPORT.margins.map(function(r){return [r[0],r[1].toFixed(2),r[2].toFixed(2),r[3]||'refused']})]});
+    cols('ch-evidence',{title:'Evidence per benchmark entity (kb-v2)',sub:'Entities by number of supporting papers, log scale; 3,089 entities',
+      cats:[{key:'v',label:'Entities',color:'var(--accent)'}],log:true,max:6000,ticks:[1,10,100,1000],unit:'Entities: ',capLabels:true,height:200,
+      data:REPORT.evidence.map(function(r){return {x:r[0],v:r[1]}}),xTitle:'Supporting papers per entity',
+      table:[['Supporting papers','Entities'],REPORT.evidence.map(function(r){return [r[0],num(r[1])]})]});
+
+    if(D.corpus){
+      var C=D.corpus, vs=C.venues;
+      var vt=document.querySelector('#venue-table tbody');
+      vs.forEach(function(v){var r=REPORT.venues[v]||['–','–'],b=C.by_venue[v],tr=el('tr');
+        [v,num(r[0]),num(b.records),r[1],b.years].forEach(function(x,i){tr.appendChild(el('td',i>0&&i<4?'num':null,x))});vt.appendChild(tr)});
+      var tt=el('tr');['Total',num(REPORT.totals.raw),num(C.records),REPORT.totals.papers,'2000–2026'].forEach(function(x,i){var c=el('td',i>0&&i<4?'num':null);c.appendChild(el('b',null,x));tt.appendChild(c)});vt.appendChild(tt);
+      cols('ch-years',{title:'Records in the cleaned corpus by year and venue',sub:fmt(C.records)+' records; PReMI records before 2015 are pooled',
+        cats:vs.map(function(v){return {key:v,label:v,color:VENUE_COLOR[v]||'var(--muted)'}}),max:2500,ticks:[0,1000,2000],tickFmt:function(t){return t?(t/1000)+'K':'0'},
+        data:C.by_year.map(function(r){var o={x:r.year==='≤2014'?'≤14':r.year.slice(2)};vs.forEach(function(v){o[v]=r[v]});return o}),xTitle:'Year (20xx)',
+        caption:'Recomputed from the Conference and Year columns of '+C.file+' ('+day(C.committed)+'); it matches the corpus figure in the progress report.',
+        table:[['Year'].concat(vs).concat(['Total']),C.by_year.map(function(r){var t=0;return [r.year].concat(vs.map(function(v){t+=r[v];return num(r[v])})).concat([num(t)])})]});
+      var cat=C.by_category;
+      document.getElementById('corpus-note').textContent='The cleaned corpus has '+num(cat['Pure Math'])+' Pure Math and '+num(cat['Applied'])+' Applied records. Compared with kb-v1, which held 4,256 records from 459 papers drawn almost entirely from CEC and FOGA, it adds 750 GECCO papers and 292 PReMI papers and is 2.7 times larger.';
+    }
+
+    /* one shared tooltip for every chart mark */
+    var tip=el('div','tip');tip.hidden=true;tip.setAttribute('role','tooltip');document.body.appendChild(tip);
+    document.addEventListener('pointermove',function(e){
+      var t=e.target.closest&&e.target.closest('[data-tip]');
+      if(!t){tip.hidden=true;return}
+      tip.textContent=t.getAttribute('data-tip');tip.hidden=false;
+      var x=e.clientX+14,yy=e.clientY+14,w=tip.offsetWidth,h=tip.offsetHeight;
+      if(x+w>innerWidth-8)x=e.clientX-w-14;if(yy+h>innerHeight-8)yy=e.clientY-h-14;
+      tip.style.left=Math.max(8,x)+'px';tip.style.top=Math.max(8,yy)+'px';
+    });
+    document.addEventListener('pointerleave',function(){tip.hidden=true});
+    document.addEventListener('scroll',function(){tip.hidden=true},{passive:true});
   }catch(e){}
 
   /* ---- team ---- */
